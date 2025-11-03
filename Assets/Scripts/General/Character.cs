@@ -46,7 +46,7 @@ public class Character : MonoBehaviour
         {
             currectHealth -= attacker.damage;
             TriggerNoDamage();
-            //受伤
+            //受伤，此处播放hit音效
             OnTakeDamage?.Invoke(attacker.transform);
         }
         else

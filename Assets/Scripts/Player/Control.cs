@@ -104,6 +104,17 @@ public class Control : MonoBehaviour
         }
     }
 
+    //这两个函数是动画事件调用的
+    public void PlayAttack1Sound()
+    {
+        AudioManager.Instance.PlayCharacterSound("attack1");
+    }
+    public void PlayAttack2Sound()
+    {
+        AudioManager.Instance.PlayCharacterSound("attack2");
+    }
+
+
     public void GetInjured(Transform attacker)
     {
         isInjured = true;

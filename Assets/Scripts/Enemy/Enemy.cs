@@ -117,7 +117,7 @@ public class Enemy : MonoBehaviour
         {
             if (wait)
             {
-                Turn();                                 // 转身
+                if ((waitTimeCounter > -90) && (waitTimeCounter <= 0)) Turn();                              // 转身
                 waitTime = Random.Range(2f, 4f);   // 停下后的随机等待时间
             }
             else
