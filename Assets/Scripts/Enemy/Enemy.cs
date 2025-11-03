@@ -101,6 +101,11 @@ public class Enemy : MonoBehaviour
     {
         // 计时器递减
         waitTimeCounter -= Time.deltaTime;
+        if (!FoundPlayer() && lostTimeCounter >= 0)
+        {
+            lostTimeCounter -= Time.deltaTime;
+        }
+
 
         // ---- 撞墙回头 ----
         if ((physicsCheck.touchedLeftWall || physicsCheck.touchedRightWall || !physicsCheck.isGround) && !hasTurned)
@@ -115,9 +120,10 @@ public class Enemy : MonoBehaviour
         // ---- 随机时间到也回头 ----
         if (waitTimeCounter <= 0)
         {
+            if (currentState == chaseState) return;      // 如果当前是追击状态，直接跳过计时
             if (wait)
             {
-                if ((waitTimeCounter > -90) && (waitTimeCounter <= 0)) Turn();                              // 转身
+                Turn();                              // 转身
                 waitTime = Random.Range(2f, 4f);   // 停下后的随机等待时间
             }
             else
@@ -125,12 +131,6 @@ public class Enemy : MonoBehaviour
             waitTimeCounter = waitTime;            // 重置计时器
             wait = !wait;                           // 切换等待/移动状态
             hasTurned = false;                      // 重置碰墙标志，允许下一次触发
-        }
-
-        // ---- 玩家丢失计时 ----
-        if (!FoundPlayer() && lostTimeCounter >= 0)
-        {
-            lostTimeCounter -= Time.deltaTime;
         }
     }
 

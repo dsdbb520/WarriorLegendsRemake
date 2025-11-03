@@ -28,6 +28,11 @@ public class Control : MonoBehaviour
     public bool isDead;
     public bool isAttack;
     public bool isJump;
+    [Header("交互检测")]
+    public float interactRange = 1.3f;
+    public Vector2 interactOffset = new Vector2(0f, 1.0f);
+    public LayerMask interactLayer;
+    private IInteractable currentTarget; // 当前检测到的可交互对象
     private void Awake()
     {
         coll= GetComponent<CapsuleCollider2D>();
@@ -37,6 +42,7 @@ public class Control : MonoBehaviour
         physicsCheck=GetComponent<PhysicsCheck>();
         inputActions.Gameplay.Jump.started += Jump;
         inputActions.Gameplay.Fire.started += Fire;
+        inputActions.Gameplay.Interact.started += Interact;
     }
 
 
@@ -59,6 +65,7 @@ public class Control : MonoBehaviour
     {
         inputDirection=inputActions.Gameplay.Move.ReadValue<Vector2>();
         CheckState();
+        DetectInteractable(); // 每帧更新可交互对象
     }
 
     private void FixedUpdate()
@@ -104,6 +111,23 @@ public class Control : MonoBehaviour
         }
     }
 
+    private void Interact(InputAction.CallbackContext context)
+    {
+        Debug.Log("按下了F键");
+        if (currentTarget != null)
+        {
+            Debug.Log("调用了接口");
+            currentTarget.Interact(); // 调用接口方法
+        }
+    }
+    private void DetectInteractable()    //寻找周围的可交互对象
+    {
+        
+        Vector2 detectPos = (Vector2)transform.position + new Vector2(interactOffset.x * transform.localScale.x, interactOffset.y);
+        Collider2D hit = Physics2D.OverlapCircle(detectPos, interactRange, interactLayer);
+        currentTarget = hit != null ? hit.GetComponent<IInteractable>() : null;
+    }
+
     //这两个函数是动画事件调用的
     public void PlayAttack1Sound()
     {
@@ -133,5 +157,10 @@ public class Control : MonoBehaviour
     {
         coll.sharedMaterial = physicsCheck.isGround ? ground : wall;
     }
-
+    private void OnDrawGizmosSelected()   //交互区域的可视化
+    {
+        Gizmos.color = Color.yellow;
+        Vector2 detectPos = (Vector2)transform.position + new Vector2(interactOffset.x * transform.localScale.x, interactOffset.y);
+        Gizmos.DrawWireSphere(detectPos, interactRange);
+    }
 }

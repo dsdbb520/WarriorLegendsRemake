@@ -11,6 +11,7 @@ public class BoarChaseState : BaseState
         currentEnemy.currectSpeed = currentEnemy.chaseSpeed;
         currentEnemy.animator.SetBool("isRun",true);
         currentEnemy.waitTimeCounter = -100;   //强制停止等待，直接加速开始追击
+        currentEnemy.wait = false;
     }
 
     public override void LogicUpdate()

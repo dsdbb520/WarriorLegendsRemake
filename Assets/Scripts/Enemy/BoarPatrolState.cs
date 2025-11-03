@@ -20,13 +20,11 @@ public class BoarPatrolState : BaseState
         }
         if ((!currentEnemy.physicsCheck.isGround) || (currentEnemy.physicsCheck.touchedLeftWall && currentEnemy.faceDir.x < 0) || (currentEnemy.physicsCheck.touchedRightWall && currentEnemy.faceDir.x > 0))
         {
-            currentEnemy.Turn();
-            currentEnemy.wait = true;
             currentEnemy.animator.SetBool("isWalk", currentEnemy.wait);
         }
         else
         {
-           currentEnemy.animator.SetBool("isWalk", !currentEnemy.wait);
+            currentEnemy.animator.SetBool("isWalk", !currentEnemy.wait);
         }
     }
     public override void PhysicsUpdate()
