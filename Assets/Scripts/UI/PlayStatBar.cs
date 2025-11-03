@@ -14,6 +14,8 @@ public class PlayStatBar : MonoBehaviour
     private bool isHealed;
     private bool isHurted;
 
+
+  
     private void Update()
     {
         if (isHealed)
