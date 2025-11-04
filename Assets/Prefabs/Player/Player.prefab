@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1188158714663283045
 Transform:
   m_ObjectHideFlags: 0
@@ -40,7 +40,7 @@ PolygonCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534090220932854696}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -97,9 +97,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0def5ba17dfa3a41b85ab3d739fb69c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 20
-  attackRange: 0
-  attackSpeed: 0
+  baseDamage: 10
+  owner: {fileID: 6563822667052962395}
+  attackManager: {fileID: 4333987088620535732}
 --- !u!1 &4244391662648854744
 GameObject:
   m_ObjectHideFlags: 0
@@ -152,6 +152,8 @@ GameObject:
   - component: {fileID: 1016211583575184012}
   - component: {fileID: 8865520895812254645}
   - component: {fileID: 6563822667052962395}
+  - component: {fileID: 1952151455428359024}
+  - component: {fileID: 4333987088620535732}
   m_Layer: 17
   m_Name: Player
   m_TagString: Player
@@ -328,8 +330,6 @@ MonoBehaviour:
   rb: {fileID: 1877007115671989361}
   physicsCheck: {fileID: 3944951789273439106}
   inputDirection: {x: 0, y: 0}
-  speed: 300
-  jumpForce: 16
   injuredForce: 8
   attackForce: 1.5
   coyoteTime: 0.4
@@ -406,8 +406,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5df99b389861d784fa8c6fd19e2597e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  currectHealth: 0
+  faction: 0
+  stats:
+    maxHealth: 100
+    currentHealth: 0
+    attack: 10
+    defense: 5
+    moveSpeed: 300
+    jumpForce: 16
   noDamageTime: 1
   noDamage: 0
   OnHealthChange:
@@ -455,6 +461,39 @@ MonoBehaviour:
   Dead:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1952151455428359024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4588372897251339272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f86a4c9d21cffe419c31d76e3cc0f37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackColliders:
+  - {fileID: 1718690419776379141}
+  - {fileID: 7104700471497589575}
+  - {fileID: 49038653931790571}
+  attackScripts:
+  - {fileID: 2357805134879101455}
+  - {fileID: 3501836084980990084}
+  - {fileID: 2475456826482004721}
+--- !u!114 &4333987088620535732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4588372897251339272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edc2239e93502ba40824ffd8d3d5ec45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackCooldown: 0.5
 --- !u!1 &7857919578982119404
 GameObject:
   m_ObjectHideFlags: 0
@@ -472,7 +511,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4491845104648019837
 Transform:
   m_ObjectHideFlags: 0
@@ -495,7 +534,7 @@ PolygonCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7857919578982119404}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -552,9 +591,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0def5ba17dfa3a41b85ab3d739fb69c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
-  attackRange: 0
-  attackSpeed: 0
+  baseDamage: 0
+  owner: {fileID: 6563822667052962395}
+  attackManager: {fileID: 4333987088620535732}
 --- !u!1 &8500477910599996337
 GameObject:
   m_ObjectHideFlags: 0
@@ -572,7 +611,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5934611502072514799
 Transform:
   m_ObjectHideFlags: 0
@@ -595,7 +634,7 @@ PolygonCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8500477910599996337}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -652,6 +691,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0def5ba17dfa3a41b85ab3d739fb69c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
-  attackRange: 0
-  attackSpeed: 0
+  baseDamage: 0
+  owner: {fileID: 6563822667052962395}
+  attackManager: {fileID: 4333987088620535732}

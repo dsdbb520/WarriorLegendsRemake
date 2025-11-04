@@ -4186,6 +4186,22 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &521502904 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2357805134879101455, guid: cc5f8052ba35880489b484a3c1869594, type: 3}
+  m_PrefabInstance: {fileID: 1605515353}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0def5ba17dfa3a41b85ab3d739fb69c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!60 &521502905 stripped
+PolygonCollider2D:
+  m_CorrespondingSourceObject: {fileID: 1718690419776379141, guid: cc5f8052ba35880489b484a3c1869594, type: 3}
+  m_PrefabInstance: {fileID: 1605515353}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &555274874
 GameObject:
   m_ObjectHideFlags: 0
@@ -4632,9 +4648,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5df99b389861d784fa8c6fd19e2597e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 20
-  currectHealth: 0
-  noDamageTime: 1
+  faction: 1
+  stats:
+    maxHealth: 20
+    currentHealth: 0
+    attack: 0
+    defense: 0
+    moveSpeed: 0
+    jumpForce: 0
+  noDamageTime: 0
   noDamage: 0
   OnHealthChange:
     m_PersistentCalls:
@@ -4681,9 +4703,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0def5ba17dfa3a41b85ab3d739fb69c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 0
-  attackRange: 0
-  attackSpeed: 0
+  baseDamage: 0
+  owner: {fileID: 617249731}
+  attackManager: {fileID: 0}
 --- !u!70 &617249733
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -26525,14 +26547,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 24783256}
     m_Modifications:
-    - target: {fileID: 49038653931790571, guid: cc5f8052ba35880489b484a3c1869594, type: 3}
-      propertyPath: m_IncludeLayers.m_Bits
-      value: 16384
-      objectReference: {fileID: 0}
-    - target: {fileID: 49038653931790571, guid: cc5f8052ba35880489b484a3c1869594, type: 3}
-      propertyPath: m_ContactCaptureLayers.m_Bits
-      value: 16512
-      objectReference: {fileID: 0}
     - target: {fileID: 655259747512371846, guid: cc5f8052ba35880489b484a3c1869594, type: 3}
       propertyPath: m_LocalPosition.x
       value: -33.04
@@ -26573,25 +26587,41 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1718690419776379141, guid: cc5f8052ba35880489b484a3c1869594, type: 3}
-      propertyPath: m_IncludeLayers.m_Bits
-      value: 16384
+    - target: {fileID: 1952151455428359024, guid: cc5f8052ba35880489b484a3c1869594, type: 3}
+      propertyPath: attackScripts.Array.size
+      value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 1718690419776379141, guid: cc5f8052ba35880489b484a3c1869594, type: 3}
-      propertyPath: m_ContactCaptureLayers.m_Bits
-      value: 16512
+    - target: {fileID: 1952151455428359024, guid: cc5f8052ba35880489b484a3c1869594, type: 3}
+      propertyPath: attackColliders.Array.size
+      value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 1952151455428359024, guid: cc5f8052ba35880489b484a3c1869594, type: 3}
+      propertyPath: attackScripts.Array.data[0]
+      value: 
+      objectReference: {fileID: 521502904}
+    - target: {fileID: 1952151455428359024, guid: cc5f8052ba35880489b484a3c1869594, type: 3}
+      propertyPath: attackScripts.Array.data[1]
+      value: 
+      objectReference: {fileID: 1612529800}
+    - target: {fileID: 1952151455428359024, guid: cc5f8052ba35880489b484a3c1869594, type: 3}
+      propertyPath: attackScripts.Array.data[2]
+      value: 
+      objectReference: {fileID: 1744737828}
+    - target: {fileID: 1952151455428359024, guid: cc5f8052ba35880489b484a3c1869594, type: 3}
+      propertyPath: attackColliders.Array.data[0]
+      value: 
+      objectReference: {fileID: 521502905}
+    - target: {fileID: 1952151455428359024, guid: cc5f8052ba35880489b484a3c1869594, type: 3}
+      propertyPath: attackColliders.Array.data[1]
+      value: 
+      objectReference: {fileID: 1612529801}
+    - target: {fileID: 1952151455428359024, guid: cc5f8052ba35880489b484a3c1869594, type: 3}
+      propertyPath: attackColliders.Array.data[2]
+      value: 
+      objectReference: {fileID: 1744737829}
     - target: {fileID: 4588372897251339272, guid: cc5f8052ba35880489b484a3c1869594, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 7104700471497589575, guid: cc5f8052ba35880489b484a3c1869594, type: 3}
-      propertyPath: m_IncludeLayers.m_Bits
-      value: 16384
-      objectReference: {fileID: 0}
-    - target: {fileID: 7104700471497589575, guid: cc5f8052ba35880489b484a3c1869594, type: 3}
-      propertyPath: m_ContactCaptureLayers.m_Bits
-      value: 16512
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -26718,6 +26748,22 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &1612529800 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3501836084980990084, guid: cc5f8052ba35880489b484a3c1869594, type: 3}
+  m_PrefabInstance: {fileID: 1605515353}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0def5ba17dfa3a41b85ab3d739fb69c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!60 &1612529801 stripped
+PolygonCollider2D:
+  m_CorrespondingSourceObject: {fileID: 7104700471497589575, guid: cc5f8052ba35880489b484a3c1869594, type: 3}
+  m_PrefabInstance: {fileID: 1605515353}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1623366889
 GameObject:
   m_ObjectHideFlags: 0
@@ -26961,8 +27007,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: c06a3f13118ee7244bff46e63957e8b6, type: 2}
-  m_sharedMaterial: {fileID: -5430045070749365273, guid: c06a3f13118ee7244bff46e63957e8b6, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 562d8f6b0ffb53649a59bfb6882dbee8, type: 2}
+  m_sharedMaterial: {fileID: 1907575317320900339, guid: 562d8f6b0ffb53649a59bfb6882dbee8, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -27048,6 +27094,22 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1744737828 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2475456826482004721, guid: cc5f8052ba35880489b484a3c1869594, type: 3}
+  m_PrefabInstance: {fileID: 1605515353}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0def5ba17dfa3a41b85ab3d739fb69c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!60 &1744737829 stripped
+PolygonCollider2D:
+  m_CorrespondingSourceObject: {fileID: 49038653931790571, guid: cc5f8052ba35880489b484a3c1869594, type: 3}
+  m_PrefabInstance: {fileID: 1605515353}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1824505912
 GameObject:
   m_ObjectHideFlags: 0

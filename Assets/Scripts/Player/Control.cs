@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,22 +16,26 @@ public class Control : MonoBehaviour
     public PhysicsCheck physicsCheck;
     private int face;
     public Vector2 inputDirection;
-    [Header("参数")]
-    public float speed;
-    public float jumpForce;
+
+    [Header("参数（非属性系统控制）")]
     public float injuredForce;
     public float attackForce;
-    public float coyoteTime;  //土狼时间
+    public float coyoteTime;  // 土狼时间
+
     [Header("状态")]
     public bool isInjured;
     public bool isDead;
     public bool isAttack;
     public bool isJump;
+
     [Header("交互检测")]
     public float interactRange = 1.3f;
     public Vector2 interactOffset = new Vector2(0f, 1.0f);
     public LayerMask interactLayer;
-    private IInteractable currentTarget; // 当前检测到的可交互对象
+    private IInteractable currentTarget;
+
+    private Character character;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -40,12 +43,18 @@ public class Control : MonoBehaviour
         PlayerAnimation = GetComponent<PlayerAnimation>();
         animator = GetComponent<Animator>();
         inputActions = new PlayerControl();
-        physicsCheck=GetComponent<PhysicsCheck>();
+        physicsCheck = GetComponent<PhysicsCheck>();
+        character = GetComponent<Character>(); // 读取角色属性系统
+
+        if (character == null)
+        {
+            Debug.LogError("Control.cs 找不到 Character 组件，请确保玩家上挂载了 Character.cs！");
+        }
+
         inputActions.Gameplay.Jump.started += Jump;
         inputActions.Gameplay.Fire.started += Fire;
         inputActions.Gameplay.Interact.started += Interact;
     }
-
 
     private void OnEnable()
     {
@@ -55,53 +64,57 @@ public class Control : MonoBehaviour
     {
         inputActions.Disable();
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
     void Update()
     {
-        inputDirection=inputActions.Gameplay.Move.ReadValue<Vector2>();
+        inputDirection = inputActions.Gameplay.Move.ReadValue<Vector2>();
         CheckState();
-        DetectInteractable(); // 每帧更新可交互对象
+        DetectInteractable();
     }
 
     private void FixedUpdate()
     {
-        if (!isInjured&&!isAttack)
+        if (!isInjured && !isAttack)
         {
-                Move();
+            Move();
         }
     }
 
     public void Move()
     {
-        if (!PlayerActionManager.Instance.canMove) return;
-        rb.velocity = new Vector2(inputDirection.x * speed * Time.deltaTime, rb.velocity.y);
+        if (!PlayerActionManager.Instance.canMove || character == null) return;
+
+        //使用属性系统的移动速度
+        float moveSpeed = character.stats.moveSpeed;
+
+        rb.velocity = new Vector2(inputDirection.x * moveSpeed * Time.deltaTime, rb.velocity.y);
+
         face = (int)transform.localScale.x;
         if (inputDirection.x < 0) face = -1;
         if (inputDirection.x > 0) face = 1;
-        //人物翻转
+
         transform.localScale = new Vector3(face, 1, 1);
     }
+
     private void Jump(InputAction.CallbackContext context)
     {
-        if ( ( physicsCheck.isGround || ( physicsCheck.hangTime < coyoteTime ) ) && !isJump && PlayerActionManager.Instance.canJump) 
+        if ((physicsCheck.isGround || (physicsCheck.hangTime < coyoteTime)) && !isJump && PlayerActionManager.Instance.canJump)
         {
-            rb.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
+            //使用属性系统的跳跃力
+            float jumpPower = character != null ? character.stats.jumpForce : 5f;
+            rb.AddForce(transform.up * jumpPower, ForceMode2D.Impulse);
             isJump = true;
             StartCoroutine(JumpAgain());
         }
     }
+
     private IEnumerator JumpAgain()
     {
         yield return new WaitForSeconds(0.5f);
         yield return new WaitUntil(() => physicsCheck.isGround);
         isJump = false;
     }
+
     private void Fire(InputAction.CallbackContext context)
     {
         if (!isInjured && PlayerActionManager.Instance.canAttack)
@@ -116,30 +129,20 @@ public class Control : MonoBehaviour
     private void Interact(InputAction.CallbackContext context)
     {
         if (!PlayerActionManager.Instance.canInteract) return;
-            Debug.Log("按下了F键");
         if (currentTarget != null)
         {
-            Debug.Log("调用了接口");
-            currentTarget.Interact(); // 调用接口方法
+            currentTarget.Interact();
         }
     }
-    private void DetectInteractable()    //寻找周围的可交互对象
+
+    private void DetectInteractable()
     {
-        
         Vector2 detectPos = (Vector2)transform.position + new Vector2(interactOffset.x * transform.localScale.x, interactOffset.y);
         Collider2D hit = Physics2D.OverlapCircle(detectPos, interactRange, interactLayer);
         currentTarget = hit != null ? hit.GetComponent<IInteractable>() : null;
     }
 
-    //这两个函数是动画事件调用的
-    public void PlayAttack1Sound()
-    {
-        AudioManager.Instance.PlayCharacterSound("attack1");
-    }
-    public void PlayAttack2Sound()
-    {
-        AudioManager.Instance.PlayCharacterSound("attack2");
-    }
+
 
 
     public void GetInjured(Transform attacker)
@@ -160,7 +163,8 @@ public class Control : MonoBehaviour
     {
         coll.sharedMaterial = physicsCheck.isGround ? ground : wall;
     }
-    private void OnDrawGizmosSelected()   //交互区域的可视化
+
+    private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
         Vector2 detectPos = (Vector2)transform.position + new Vector2(interactOffset.x * transform.localScale.x, interactOffset.y);
