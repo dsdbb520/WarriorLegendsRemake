@@ -35,7 +35,8 @@ public class Control : MonoBehaviour
     private IInteractable currentTarget; // 当前检测到的可交互对象
     private void Awake()
     {
-        coll= GetComponent<CapsuleCollider2D>();
+        rb = GetComponent<Rigidbody2D>();
+        coll = GetComponent<CapsuleCollider2D>();
         PlayerAnimation = GetComponent<PlayerAnimation>();
         animator = GetComponent<Animator>();
         inputActions = new PlayerControl();
@@ -78,6 +79,7 @@ public class Control : MonoBehaviour
 
     public void Move()
     {
+        if (!PlayerActionManager.Instance.canMove) return;
         rb.velocity = new Vector2(inputDirection.x * speed * Time.deltaTime, rb.velocity.y);
         face = (int)transform.localScale.x;
         if (inputDirection.x < 0) face = -1;
@@ -87,7 +89,7 @@ public class Control : MonoBehaviour
     }
     private void Jump(InputAction.CallbackContext context)
     {
-        if ( ( physicsCheck.isGround || ( physicsCheck.hangTime < coyoteTime ) ) && !isJump ) 
+        if ( ( physicsCheck.isGround || ( physicsCheck.hangTime < coyoteTime ) ) && !isJump && PlayerActionManager.Instance.canJump) 
         {
             rb.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
             isJump = true;
@@ -102,7 +104,7 @@ public class Control : MonoBehaviour
     }
     private void Fire(InputAction.CallbackContext context)
     {
-        if (!isInjured)
+        if (!isInjured && PlayerActionManager.Instance.canAttack)
         {
             isAttack = true;
             PlayerAnimation.Attack();
@@ -113,7 +115,8 @@ public class Control : MonoBehaviour
 
     private void Interact(InputAction.CallbackContext context)
     {
-        Debug.Log("按下了F键");
+        if (!PlayerActionManager.Instance.canInteract) return;
+            Debug.Log("按下了F键");
         if (currentTarget != null)
         {
             Debug.Log("调用了接口");

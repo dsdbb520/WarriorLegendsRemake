@@ -45,7 +45,7 @@ PolygonCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 16384
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -58,7 +58,7 @@ PolygonCollider2D:
     m_Bits: 4294967295
   m_ContactCaptureLayers:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 16512
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -324,9 +324,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wall: {fileID: 6200000, guid: 050787f888d78fe4d8230a0772671715, type: 2}
   ground: {fileID: 6200000, guid: b8dd072f90e38554fa63379d50502d81, type: 2}
-  PlayerAnimation: {fileID: 0}
+  PlayerAnimation: {fileID: 1016211583575184012}
   rb: {fileID: 1877007115671989361}
-  physicsCheck: {fileID: 0}
+  physicsCheck: {fileID: 3944951789273439106}
   inputDirection: {x: 0, y: 0}
   speed: 300
   jumpForce: 16
@@ -500,7 +500,7 @@ PolygonCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 16384
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -513,7 +513,7 @@ PolygonCollider2D:
     m_Bits: 4294967295
   m_ContactCaptureLayers:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 16512
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -600,7 +600,7 @@ PolygonCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 16384
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -613,7 +613,7 @@ PolygonCollider2D:
     m_Bits: 4294967295
   m_ContactCaptureLayers:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 16512
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295

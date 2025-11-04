@@ -31,8 +31,8 @@ public class CameraAutoFollow : MonoBehaviour
 
     private IEnumerator DelayedFindPlayer()
     {
-        // 延迟 1 秒，确保玩家对象加载完毕
-        yield return new WaitForSeconds(1f);
+        // 延迟 0.1 秒，确保玩家对象加载完毕
+        yield return new WaitForSeconds(0.1f);
         FindAndFollowPlayer();
     }
 
