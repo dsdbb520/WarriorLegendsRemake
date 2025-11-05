@@ -54,6 +54,7 @@ public class Control : MonoBehaviour
         inputActions.Gameplay.Jump.started += Jump;
         inputActions.Gameplay.Fire.started += Fire;
         inputActions.Gameplay.Interact.started += Interact;
+        inputActions.Gameplay.Save.started += Save;
     }
 
     private void OnEnable()
@@ -133,6 +134,11 @@ public class Control : MonoBehaviour
         {
             currentTarget.Interact();
         }
+    }
+
+    private void Save(InputAction.CallbackContext context)
+    {
+        SaveSystemJSON.SavePlayer(GetComponent<Character>());
     }
 
     private void DetectInteractable()

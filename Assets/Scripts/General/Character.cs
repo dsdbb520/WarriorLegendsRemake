@@ -28,6 +28,7 @@ public class Character : MonoBehaviour
 
     [Header("ºËÐÄÊôÐÔ")]
     public CharacterStats stats = new CharacterStats();
+    public PlayStatBar playStatBar;
 
     public float maxHealth => stats.maxHealth;    // ¼æÈÝ¾ÉUI
     public float currentHealth => stats.currentHealth;
@@ -46,7 +47,6 @@ public class Character : MonoBehaviour
 
     private void Start()
     {
-        stats.currentHealth = stats.maxHealth;
         beforeHealth = stats.currentHealth;
         OnHealthChange?.Invoke(this);
     }

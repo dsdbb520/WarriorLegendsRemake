@@ -409,11 +409,12 @@ MonoBehaviour:
   faction: 0
   stats:
     maxHealth: 100
-    currentHealth: 0
+    currentHealth: 100
     attack: 10
     defense: 5
     moveSpeed: 300
     jumpForce: 16
+  playStatBar: {fileID: 0}
   noDamageTime: 1
   noDamage: 0
   OnHealthChange:
