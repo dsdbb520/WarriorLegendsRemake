@@ -16,8 +16,6 @@ public class PlayerAttackEvents : MonoBehaviour
 
         attackColliders[index].enabled = true;
 
-        if (index < attackScripts.Count)
-            attackScripts[index]?.ResetHitTargets();
     }
 
 

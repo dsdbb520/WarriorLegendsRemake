@@ -146,6 +146,17 @@ public class Control : MonoBehaviour
         Vector2 detectPos = (Vector2)transform.position + new Vector2(interactOffset.x * transform.localScale.x, interactOffset.y);
         Collider2D hit = Physics2D.OverlapCircle(detectPos, interactRange, interactLayer);
         currentTarget = hit != null ? hit.GetComponent<IInteractable>() : null;
+        if (currentTarget != null)
+        {
+            var indicator = (currentTarget as MonoBehaviour)?.GetComponent<InteractionIndicator>();
+            indicator?.Show();//显示交互标识
+        }
+        else
+        {
+            // 隐藏交互标识
+            foreach (var obj in FindObjectsOfType<InteractionIndicator>())
+                obj.Hide();
+        }
     }
 
 

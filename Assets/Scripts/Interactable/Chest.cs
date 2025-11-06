@@ -10,7 +10,6 @@ public class Chest : MonoBehaviour, IInteractable
     private SpriteRenderer spriteRenderer;
     public float openDelay = 0.1f; // 延迟时间，让开箱更自然
 
-
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -23,6 +22,8 @@ public class Chest : MonoBehaviour, IInteractable
         {
             StartCoroutine(OpenChestCoroutine());
         }
+        var indicator = GetComponent<InteractionIndicator>();
+        if (indicator != null) indicator.OnInteracted();
     }
 
     private IEnumerator OpenChestCoroutine()

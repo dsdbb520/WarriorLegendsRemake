@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1879096216469579019}
   - component: {fileID: 7391415586071741820}
   - component: {fileID: 7087967225623286223}
+  - component: {fileID: 3987660191581447595}
   - component: {fileID: 2367110757604408997}
   m_Layer: 11
   m_Name: Chest
@@ -102,6 +103,21 @@ MonoBehaviour:
   closedSprite: {fileID: 21300000, guid: d877f96b8db8be742af779780e6edaa0, type: 2}
   openSprite: {fileID: 21300000, guid: c9985dc6dd0d96f4e9b2cfdf41a9fc06, type: 2}
   openDelay: 0.1
+--- !u!114 &3987660191581447595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6336002714065001878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23c52364b665c1d4891e84fc75a42a48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  indicatorPrefab: {fileID: 7201007870091070336, guid: b5b89c5344e23e94892da5c8a0b1ca6b, type: 3}
+  autoHideAfterInteract: 1
+  offset: {x: 0, y: 1.5, z: 0}
 --- !u!61 &2367110757604408997
 BoxCollider2D:
   m_ObjectHideFlags: 0

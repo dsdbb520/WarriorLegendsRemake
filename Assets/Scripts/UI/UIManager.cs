@@ -5,12 +5,11 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
+    public static UIManager Instance;  // 单例引用
     public PlayStatBar PlayStatBar;
 
     [Header("事件监听")]
     public CharacterEvent healthEvent;
-
-
 
     private void OnEnable()
     {
@@ -28,5 +27,7 @@ public class UIManager : MonoBehaviour
         var persentage = character.currentHealth / character.maxHealth;
         PlayStatBar.OnHealthChange(persentage);
     }
+
+    
 
 }
