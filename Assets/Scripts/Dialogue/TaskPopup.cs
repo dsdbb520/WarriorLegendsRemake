@@ -5,7 +5,9 @@ using TMPro;
 public class TaskPopup : MonoBehaviour
 {
     [Header("UI 引用")]
-    public TextMeshProUGUI contentText;
+    public TextMeshProUGUI titleText;       // 任务标题
+    public TextMeshProUGUI contentText;     // 任务描述
+    public Image backgroundImage;           // 背景图片
     public Button acceptButton;
     public Button rejectButton;
     public Button closeButton;
@@ -13,9 +15,17 @@ public class TaskPopup : MonoBehaviour
     private System.Action onAccept;
     private System.Action onReject;
 
-    public void Setup(string message, System.Action acceptCallback, System.Action rejectCallback)
+    public void Setup(string title, string description, System.Action acceptCallback, System.Action rejectCallback)
     {
-        contentText.text = message;
+        if (titleText != null)
+            titleText.text = title;
+
+        if (contentText != null)
+            contentText.text = description;
+
+        if (backgroundImage != null)
+            backgroundImage.gameObject.SetActive(true);  // 显示背景
+
         onAccept = acceptCallback;
         onReject = rejectCallback;
     }
@@ -24,11 +34,12 @@ public class TaskPopup : MonoBehaviour
     {
         gameObject.SetActive(true);
 
-        // 按钮绑定
+        // 移除旧监听
         acceptButton.onClick.RemoveAllListeners();
         rejectButton.onClick.RemoveAllListeners();
         closeButton.onClick.RemoveAllListeners();
 
+        // 按钮绑定
         acceptButton.onClick.AddListener(() =>
         {
             onAccept?.Invoke();
@@ -43,7 +54,7 @@ public class TaskPopup : MonoBehaviour
 
         closeButton.onClick.AddListener(() =>
         {
-            onReject?.Invoke(); // 关闭等同于拒绝
+            onReject?.Invoke();
             Destroy(gameObject);
         });
     }

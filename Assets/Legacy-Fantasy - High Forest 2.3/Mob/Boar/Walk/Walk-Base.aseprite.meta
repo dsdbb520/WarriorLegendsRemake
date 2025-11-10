@@ -8,7 +8,6 @@ ScriptedImporter:
   assetBundleName: 
   assetBundleVariant: 
   script: {fileID: 11500000, guid: 62a9f0aa5b59740cfbadc7e5f9823bb0, type: 3}
-  importerVersion: 2
   textureImporterSettings:
     alphaSource: 1
     mipMapMode: 0
@@ -78,7 +77,6 @@ ScriptedImporter:
     defaultPivotSpace: 0
     defaultPivotAlignment: 7
     customPivotPosition: {x: 0.5, y: 0.5}
-    mosaicPadding: 4
     spritePadding: 0
     generateModelPrefab: 1
     generateAnimationClips: 1
@@ -91,7 +89,6 @@ ScriptedImporter:
     defaultPivotSpace: 0
     defaultPivotAlignment: 7
     customPivotPosition: {x: 0.5, y: 0.5}
-    mosaicPadding: 4
     spritePadding: 0
     generateModelPrefab: 1
     generateAnimationClips: 1
@@ -122,7 +119,7 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: Frame_0
+  - name: Walk-Base_Frame_0
     originalName: 
     pivot: {x: 0.53658533, y: 0}
     alignment: 9
@@ -133,7 +130,7 @@ ScriptedImporter:
       y: 39
       width: 41
       height: 27
-    spriteID: 80e002f10235ece41b0421d7c11fe69c
+    spriteID: 8ccc9babfed44c344bcda52703aaf4bb
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -142,7 +139,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 39}
-  - name: Frame_1
+  - name: Walk-Base_Frame_1
     originalName: 
     pivot: {x: 0.54761904, y: 0}
     alignment: 9
@@ -153,7 +150,7 @@ ScriptedImporter:
       y: 39
       width: 42
       height: 26
-    spriteID: 84af65a7629f7fa479c4a53865a0db05
+    spriteID: 050a9b54d67c4a1469684193ed888337
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -162,7 +159,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 53, y: 39}
-  - name: Frame_2
+  - name: Walk-Base_Frame_2
     originalName: 
     pivot: {x: 0.55813956, y: 0}
     alignment: 9
@@ -173,7 +170,7 @@ ScriptedImporter:
       y: 4
       width: 43
       height: 27
-    spriteID: 1640afb324ea57d4abbcce2ee39bd8d6
+    spriteID: 53268dc61a7227b41b977918069ba753
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -182,7 +179,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 4}
-  - name: Frame_3
+  - name: Walk-Base_Frame_3
     originalName: 
     pivot: {x: 0.54761904, y: 0}
     alignment: 9
@@ -193,7 +190,7 @@ ScriptedImporter:
       y: 4
       width: 42
       height: 27
-    spriteID: 28dbf2d27e5965d46b069f7d340ca68e
+    spriteID: 89ed8ad8072515747a9395c0c454e529
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -202,7 +199,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 55, y: 4}
-  - name: Frame_4
+  - name: Walk-Base_Frame_4
     originalName: 
     pivot: {x: 0.5, y: 0}
     alignment: 9
@@ -213,7 +210,7 @@ ScriptedImporter:
       y: 74
       width: 38
       height: 26
-    spriteID: 28befec5d94a8c544893244a0d7f3a71
+    spriteID: 9ca3f1f4109651c44ad85811d2900010
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -222,7 +219,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 50, y: 74}
-  - name: Frame_5
+  - name: Walk-Base_Frame_5
     originalName: 
     pivot: {x: 0.5, y: 0}
     alignment: 9
@@ -233,7 +230,7 @@ ScriptedImporter:
       y: 74
       width: 38
       height: 27
-    spriteID: 00f59903382edc64180fe9d83192da19
+    spriteID: 0e4a0c17b413ebc4c92062946bcfd35f
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -245,71 +242,60 @@ ScriptedImporter:
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    uuid:
-      value0: 1327070893
-      value1: 0
-      value2: 0
-      value3: 0
-    guid: 1327070893
+    guid: -1433832887
     name: Walk-Base
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: Frame_0
+    - name: Walk-Base_Frame_0
       frameIndex: 0
-      additiveSortOrder: 0
       cellRect:
         x: 2
         y: 0
         width: 41
         height: 27
-      spriteId: 80e002f10235ece41b0421d7c11fe69c
-    - name: Frame_1
+      spriteId: 8ccc9babfed44c344bcda52703aaf4bb
+    - name: Walk-Base_Frame_1
       frameIndex: 1
-      additiveSortOrder: 0
       cellRect:
         x: 1
         y: 0
         width: 42
         height: 26
-      spriteId: 84af65a7629f7fa479c4a53865a0db05
-    - name: Frame_2
+      spriteId: 050a9b54d67c4a1469684193ed888337
+    - name: Walk-Base_Frame_2
       frameIndex: 2
-      additiveSortOrder: 0
       cellRect:
         x: 0
         y: 0
         width: 43
         height: 27
-      spriteId: 1640afb324ea57d4abbcce2ee39bd8d6
-    - name: Frame_3
+      spriteId: 53268dc61a7227b41b977918069ba753
+    - name: Walk-Base_Frame_3
       frameIndex: 3
-      additiveSortOrder: 0
       cellRect:
         x: 1
         y: 0
         width: 42
         height: 27
-      spriteId: 28dbf2d27e5965d46b069f7d340ca68e
-    - name: Frame_4
+      spriteId: 89ed8ad8072515747a9395c0c454e529
+    - name: Walk-Base_Frame_4
       frameIndex: 4
-      additiveSortOrder: 0
       cellRect:
         x: 5
         y: 0
         width: 38
         height: 26
-      spriteId: 28befec5d94a8c544893244a0d7f3a71
-    - name: Frame_5
+      spriteId: 9ca3f1f4109651c44ad85811d2900010
+    - name: Walk-Base_Frame_5
       frameIndex: 5
-      additiveSortOrder: 0
       cellRect:
         x: 5
         y: 0
         width: 38
         height: 27
-      spriteId: 00f59903382edc64180fe9d83192da19
+      spriteId: 0e4a0c17b413ebc4c92062946bcfd35f
     linkedCells: []
     parentIndex: -1
   platformSettings:
@@ -325,8 +311,6 @@ ScriptedImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     androidETC2FallbackOverride: 0
-  generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
   canvasSize: {x: 48, y: 32}
-  previousTextureSize: {x: 128, y: 128}

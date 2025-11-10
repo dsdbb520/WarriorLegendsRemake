@@ -1,0 +1,6 @@
+﻿npcName,type,content,taskID,taskTitle,taskDescription
+TutorialNPC,dialogueLines,"你好，冒险者！",001,,,,,
+TutorialNPC,dialogueLines,"快去前面的村庄！",001,,,,,
+TutorialNPC,afterAcceptDialogue,"我在村庄等你！",001,,,,,
+TutorialNPC,task,,001,前往村庄,"别问那么多，叫你去就去"
+TutorialNPC1,dialogueLines,"测试！"

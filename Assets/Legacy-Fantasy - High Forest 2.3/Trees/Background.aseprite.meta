@@ -8,7 +8,6 @@ ScriptedImporter:
   assetBundleName: 
   assetBundleVariant: 
   script: {fileID: 11500000, guid: 62a9f0aa5b59740cfbadc7e5f9823bb0, type: 3}
-  importerVersion: 2
   textureImporterSettings:
     alphaSource: 1
     mipMapMode: 0
@@ -78,7 +77,6 @@ ScriptedImporter:
     defaultPivotSpace: 0
     defaultPivotAlignment: 7
     customPivotPosition: {x: 0.5, y: 0.5}
-    mosaicPadding: 4
     spritePadding: 0
     generateModelPrefab: 1
     generateAnimationClips: 1
@@ -91,7 +89,6 @@ ScriptedImporter:
     defaultPivotSpace: 0
     defaultPivotAlignment: 7
     customPivotPosition: {x: 0.5, y: 0.5}
-    mosaicPadding: 4
     spritePadding: 0
     generateModelPrefab: 1
     generateAnimationClips: 1
@@ -133,7 +130,7 @@ ScriptedImporter:
       y: 4
       width: 896
       height: 256
-    spriteID: a09df8ce7fe4a9a4c9b328fea893b79a
+    spriteID: b45628234b17c274ba52106b28118ff2
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -145,12 +142,7 @@ ScriptedImporter:
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    uuid:
-      value0: 332801758
-      value1: 0
-      value2: 0
-      value3: 0
-    guid: 332801758
+    guid: -1021688250
     name: Background
     layerFlags: 0
     layerType: 0
@@ -158,13 +150,12 @@ ScriptedImporter:
     cells:
     - name: Background
       frameIndex: 0
-      additiveSortOrder: 0
       cellRect:
         x: 0
         y: 0
         width: 896
         height: 256
-      spriteId: a09df8ce7fe4a9a4c9b328fea893b79a
+      spriteId: b45628234b17c274ba52106b28118ff2
     linkedCells: []
     parentIndex: -1
   platformSettings:
@@ -180,8 +171,6 @@ ScriptedImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     androidETC2FallbackOverride: 0
-  generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
   canvasSize: {x: 896, y: 256}
-  previousTextureSize: {x: 1024, y: 512}

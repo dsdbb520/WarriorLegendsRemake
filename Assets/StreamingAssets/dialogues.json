@@ -1,0 +1,17 @@
+﻿{
+    "entries": [
+        {
+            "npcName": "TutorialNPC",
+            "taskID": "001",
+            "taskTitle": "前往村庄",
+            "taskDescription": "\"别问那么多，叫你去就去\"",
+            "dialogueLines": [
+                "\"你好，冒险者！\"",
+                "\"快去前面的村庄！\""
+            ],
+            "afterAcceptDialogue": [
+                "\"我在村庄等你！\""
+            ]
+        }
+    ]
+}

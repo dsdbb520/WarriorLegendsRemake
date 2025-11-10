@@ -19,6 +19,7 @@ public class Attack : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        ResetHitTargets();    //可能导致bug：在Collider反复进出的时候会多次造成伤害
         TryAttack(collision);
     }
     
@@ -48,6 +49,7 @@ public class Attack : MonoBehaviour
     // 可在每段攻击动画结束或销毁时清空已命中目标
     public void ResetHitTargets()
     {
+        Debug.Log("HitTargets Reset！");
         hitTargets.Clear();
     }
 }

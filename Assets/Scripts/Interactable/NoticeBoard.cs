@@ -9,6 +9,6 @@ public class NoticeBoard : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        DialogueManager.Instance.StartDialogue(dialogueID);
+        
     }
 }

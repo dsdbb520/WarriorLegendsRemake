@@ -8,7 +8,6 @@ ScriptedImporter:
   assetBundleName: 
   assetBundleVariant: 
   script: {fileID: 11500000, guid: 62a9f0aa5b59740cfbadc7e5f9823bb0, type: 3}
-  importerVersion: 2
   textureImporterSettings:
     alphaSource: 1
     mipMapMode: 0
@@ -78,7 +77,6 @@ ScriptedImporter:
     defaultPivotSpace: 0
     defaultPivotAlignment: 7
     customPivotPosition: {x: 0.5, y: 0.5}
-    mosaicPadding: 4
     spritePadding: 0
     generateModelPrefab: 1
     generateAnimationClips: 1
@@ -91,7 +89,6 @@ ScriptedImporter:
     defaultPivotSpace: 0
     defaultPivotAlignment: 7
     customPivotPosition: {x: 0.5, y: 0.5}
-    mosaicPadding: 4
     spritePadding: 0
     generateModelPrefab: 1
     generateAnimationClips: 1
@@ -122,7 +119,7 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: Frame_0
+  - name: Attack-01_Frame_0
     originalName: 
     pivot: {x: 0.42857143, y: -0.36363637}
     alignment: 9
@@ -133,7 +130,7 @@ ScriptedImporter:
       y: 189
       width: 35
       height: 44
-    spriteID: 931380b793115a84f8ccf85bdca96139
+    spriteID: 46715c6437e15e448862c315eb57058a
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -142,7 +139,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 66, y: 189}
-  - name: Frame_1
+  - name: Attack-01_Frame_1
     originalName: 
     pivot: {x: 0.2777778, y: -0.25}
     alignment: 9
@@ -153,7 +150,7 @@ ScriptedImporter:
       y: 77
       width: 54
       height: 64
-    spriteID: ff232ab6f84c0a0428d6e0d0b112258e
+    spriteID: 8c3f239b0cd74c943992e4a347b43198
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -162,7 +159,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 77}
-  - name: Frame_2
+  - name: Attack-01_Frame_2
     originalName: 
     pivot: {x: 0.48571432, y: -0.26666668}
     alignment: 9
@@ -173,7 +170,7 @@ ScriptedImporter:
       y: 4
       width: 35
       height: 60
-    spriteID: 48eeff95d1449e8419c9a5c2536dd9d9
+    spriteID: 728e9bbb6de0f5a4db250037c606a5f5
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -182,7 +179,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 73, y: 4}
-  - name: Frame_3
+  - name: Attack-01_Frame_3
     originalName: 
     pivot: {x: 0.48571432, y: -0.33333334}
     alignment: 9
@@ -193,7 +190,7 @@ ScriptedImporter:
       y: 77
       width: 35
       height: 48
-    spriteID: 4cf5591a6bcd8754881148094f0c444b
+    spriteID: d4628590075abae48b60d67795471cb1
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -202,7 +199,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 66, y: 77}
-  - name: Frame_4
+  - name: Attack-01_Frame_4
     originalName: 
     pivot: {x: 0.48571432, y: -0.33333334}
     alignment: 9
@@ -213,7 +210,7 @@ ScriptedImporter:
       y: 133
       width: 35
       height: 48
-    spriteID: 1ecd2731a1638eb4a830cf0f1cebaf9c
+    spriteID: 0f1d56c64561ba145bb80b9d1cbf396d
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -222,7 +219,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 66, y: 133}
-  - name: Frame_5
+  - name: Attack-01_Frame_5
     originalName: 
     pivot: {x: 0.52459013, y: -0.061538465}
     alignment: 9
@@ -233,7 +230,7 @@ ScriptedImporter:
       y: 4
       width: 61
       height: 65
-    spriteID: 290e15d187673c748be0c0ac3c08d8d1
+    spriteID: 73ee82ad02a76434c846c8176094bb37
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -242,7 +239,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 4}
-  - name: Frame_6
+  - name: Attack-01_Frame_6
     originalName: 
     pivot: {x: 0.7407407, y: -0.36363637}
     alignment: 9
@@ -253,7 +250,7 @@ ScriptedImporter:
       y: 202
       width: 54
       height: 44
-    spriteID: c5d029ae3c103cf469dd2187146b9936
+    spriteID: f05e34672b2a8ca4f98485fa1c42aaa4
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -262,7 +259,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 202}
-  - name: Frame_7
+  - name: Attack-01_Frame_7
     originalName: 
     pivot: {x: 0.7407407, y: -0.35555556}
     alignment: 9
@@ -273,7 +270,7 @@ ScriptedImporter:
       y: 149
       width: 54
       height: 45
-    spriteID: 198795f608b4dca4ab00fcec6ca52d91
+    spriteID: a59c62d1ed51dbb4db3b7ce80f0c9359
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -285,89 +282,76 @@ ScriptedImporter:
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    uuid:
-      value0: 1246915270
-      value1: 0
-      value2: 0
-      value3: 0
-    guid: 1246915270
+    guid: 1104123150
     name: Attack-01
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: Frame_0
+    - name: Attack-01_Frame_0
       frameIndex: 0
-      additiveSortOrder: 0
       cellRect:
         x: 33
         y: 16
         width: 35
         height: 44
-      spriteId: 931380b793115a84f8ccf85bdca96139
-    - name: Frame_1
+      spriteId: 46715c6437e15e448862c315eb57058a
+    - name: Attack-01_Frame_1
       frameIndex: 1
-      additiveSortOrder: 0
       cellRect:
         x: 33
         y: 16
         width: 54
         height: 64
-      spriteId: ff232ab6f84c0a0428d6e0d0b112258e
-    - name: Frame_2
+      spriteId: 8c3f239b0cd74c943992e4a347b43198
+    - name: Attack-01_Frame_2
       frameIndex: 2
-      additiveSortOrder: 0
       cellRect:
         x: 31
         y: 16
         width: 35
         height: 60
-      spriteId: 48eeff95d1449e8419c9a5c2536dd9d9
-    - name: Frame_3
+      spriteId: 728e9bbb6de0f5a4db250037c606a5f5
+    - name: Attack-01_Frame_3
       frameIndex: 3
-      additiveSortOrder: 0
       cellRect:
         x: 31
         y: 16
         width: 35
         height: 48
-      spriteId: 4cf5591a6bcd8754881148094f0c444b
-    - name: Frame_4
+      spriteId: d4628590075abae48b60d67795471cb1
+    - name: Attack-01_Frame_4
       frameIndex: 4
-      additiveSortOrder: 0
       cellRect:
         x: 31
         y: 16
         width: 35
         height: 48
-      spriteId: 1ecd2731a1638eb4a830cf0f1cebaf9c
-    - name: Frame_5
+      spriteId: 0f1d56c64561ba145bb80b9d1cbf396d
+    - name: Attack-01_Frame_5
       frameIndex: 5
-      additiveSortOrder: 0
       cellRect:
         x: 16
         y: 4
         width: 61
         height: 65
-      spriteId: 290e15d187673c748be0c0ac3c08d8d1
-    - name: Frame_6
+      spriteId: 73ee82ad02a76434c846c8176094bb37
+    - name: Attack-01_Frame_6
       frameIndex: 6
-      additiveSortOrder: 0
       cellRect:
         x: 8
         y: 16
         width: 54
         height: 44
-      spriteId: c5d029ae3c103cf469dd2187146b9936
-    - name: Frame_7
+      spriteId: f05e34672b2a8ca4f98485fa1c42aaa4
+    - name: Attack-01_Frame_7
       frameIndex: 7
-      additiveSortOrder: 0
       cellRect:
         x: 8
         y: 16
         width: 54
         height: 45
-      spriteId: 198795f608b4dca4ab00fcec6ca52d91
+      spriteId: a59c62d1ed51dbb4db3b7ce80f0c9359
     linkedCells: []
     parentIndex: -1
   platformSettings:
@@ -383,8 +367,6 @@ ScriptedImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     androidETC2FallbackOverride: 0
-  generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
   canvasSize: {x: 96, y: 80}
-  previousTextureSize: {x: 128, y: 256}

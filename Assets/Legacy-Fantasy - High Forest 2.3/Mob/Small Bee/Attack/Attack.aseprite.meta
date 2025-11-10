@@ -8,7 +8,6 @@ ScriptedImporter:
   assetBundleName: 
   assetBundleVariant: 
   script: {fileID: 11500000, guid: 62a9f0aa5b59740cfbadc7e5f9823bb0, type: 3}
-  importerVersion: 2
   textureImporterSettings:
     alphaSource: 1
     mipMapMode: 0
@@ -78,7 +77,6 @@ ScriptedImporter:
     defaultPivotSpace: 0
     defaultPivotAlignment: 7
     customPivotPosition: {x: 0.5, y: 0.5}
-    mosaicPadding: 4
     spritePadding: 0
     generateModelPrefab: 1
     generateAnimationClips: 1
@@ -91,7 +89,6 @@ ScriptedImporter:
     defaultPivotSpace: 0
     defaultPivotAlignment: 7
     customPivotPosition: {x: 0.5, y: 0.5}
-    mosaicPadding: 4
     spritePadding: 0
     generateModelPrefab: 1
     generateAnimationClips: 1
@@ -122,7 +119,7 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: Frame_0
+  - name: Attack_Frame_0
     originalName: 
     pivot: {x: 0.33333334, y: -0.5757576}
     alignment: 9
@@ -133,7 +130,7 @@ ScriptedImporter:
       y: 53
       width: 33
       height: 33
-    spriteID: c47101b471de13c4fbc03c7ac95648c5
+    spriteID: fc770687f8b88b245bbf43db77122200
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -142,7 +139,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 46, y: 53}
-  - name: Frame_1
+  - name: Attack_Frame_1
     originalName: 
     pivot: {x: 0.2647059, y: -0.45945948}
     alignment: 9
@@ -153,7 +150,7 @@ ScriptedImporter:
       y: 53
       width: 34
       height: 37
-    spriteID: c9467047eaf3084488836c77400b97a7
+    spriteID: 29f275484f0bcd44385df7e63651c9ce
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -162,7 +159,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 53}
-  - name: Frame_2
+  - name: Attack_Frame_2
     originalName: 
     pivot: {x: 0.2702703, y: -0.4473684}
     alignment: 9
@@ -173,7 +170,7 @@ ScriptedImporter:
       y: 4
       width: 37
       height: 38
-    spriteID: 344ed830c01571444ab38d07eac06c5b
+    spriteID: b54bbb6b4f83dc14cb7730a80883ac8f
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -182,7 +179,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 53, y: 4}
-  - name: Frame_3
+  - name: Attack_Frame_3
     originalName: 
     pivot: {x: 0.26829267, y: -0.4390244}
     alignment: 9
@@ -193,7 +190,7 @@ ScriptedImporter:
       y: 4
       width: 41
       height: 41
-    spriteID: eb998ac4fa85af944a539d9f23dc13be
+    spriteID: 79bd8f1cc7df3004faad91699bb538c6
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -205,53 +202,44 @@ ScriptedImporter:
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    uuid:
-      value0: 4151092602
-      value1: 0
-      value2: 0
-      value3: 0
-    guid: -143874694
+    guid: -1283678670
     name: Attack
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: Frame_0
+    - name: Attack_Frame_0
       frameIndex: 0
-      additiveSortOrder: 0
       cellRect:
         x: 21
         y: 19
         width: 33
         height: 33
-      spriteId: c47101b471de13c4fbc03c7ac95648c5
-    - name: Frame_1
+      spriteId: fc770687f8b88b245bbf43db77122200
+    - name: Attack_Frame_1
       frameIndex: 1
-      additiveSortOrder: 0
       cellRect:
         x: 23
         y: 17
         width: 34
         height: 37
-      spriteId: c9467047eaf3084488836c77400b97a7
-    - name: Frame_2
+      spriteId: 29f275484f0bcd44385df7e63651c9ce
+    - name: Attack_Frame_2
       frameIndex: 2
-      additiveSortOrder: 0
       cellRect:
         x: 22
         y: 17
         width: 37
         height: 38
-      spriteId: 344ed830c01571444ab38d07eac06c5b
-    - name: Frame_3
+      spriteId: b54bbb6b4f83dc14cb7730a80883ac8f
+    - name: Attack_Frame_3
       frameIndex: 3
-      additiveSortOrder: 0
       cellRect:
         x: 21
         y: 18
         width: 41
         height: 41
-      spriteId: eb998ac4fa85af944a539d9f23dc13be
+      spriteId: 79bd8f1cc7df3004faad91699bb538c6
     linkedCells: []
     parentIndex: -1
   platformSettings:
@@ -267,8 +255,6 @@ ScriptedImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     androidETC2FallbackOverride: 0
-  generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
   canvasSize: {x: 64, y: 64}
-  previousTextureSize: {x: 128, y: 128}
