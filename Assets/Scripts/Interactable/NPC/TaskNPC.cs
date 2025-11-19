@@ -21,6 +21,7 @@ public class TaskNPC : MonoBehaviour, IInteractable
     public Vector3 indicatorScale = Vector3.one;
 
     private GameObject indicatorInstance;
+    private List<string> activeTipIDs; // 记录当前显示的 Tip
     private bool isTalking = false;
 
     private void Start()
@@ -42,14 +43,10 @@ public class TaskNPC : MonoBehaviour, IInteractable
 
         isTalking = true;
 
-        // 隐藏所有 ActionTips
+        // 关闭所有 Tip，并记录当前显示状态
         if (ActionTipUI.Instance != null)
-        {
-            foreach (var tip in ActionTipUI.Instance.tips)
-            {
-                ActionTipUI.Instance.HideTip(tip.tipID);
-            }
-        }
+            activeTipIDs = ActionTipUI.Instance.HideAllTipsAndReturnActive();
+
 
         PlayerActionManager.Instance.DisableAll();
 
@@ -141,7 +138,7 @@ public class TaskNPC : MonoBehaviour, IInteractable
     private void OnAccept(DialogueEntryCSV data)
     {
         hasGivenTask = true;
-
+        TaskManager.Instance.AddTask(data);   //将任务添加至已接受的任务列表
         if (indicatorInstance != null)
             indicatorInstance.SetActive(false);
 
@@ -154,17 +151,26 @@ public class TaskNPC : MonoBehaviour, IInteractable
         else
         {
             PlayerActionManager.Instance.EnableAll();
+            // 恢复 Tip
+            if (ActionTipUI.Instance != null && activeTipIDs != null)
+                ActionTipUI.Instance.RestoreTips(activeTipIDs);
         }
     }
 
     private void OnReject()
     {
         PlayerActionManager.Instance.EnableAll();
+        // 恢复 Tip
+        if (ActionTipUI.Instance != null && activeTipIDs != null)
+            ActionTipUI.Instance.RestoreTips(activeTipIDs);
     }
 
     private IEnumerator WaitForDialogueEndThenUnlock()
     {
         yield return new WaitUntil(() => DialogueManager.Instance.dialoguePanel.activeSelf == false);
         PlayerActionManager.Instance.EnableAll();
+        // 恢复 Tip
+        if (ActionTipUI.Instance != null && activeTipIDs != null)
+            ActionTipUI.Instance.RestoreTips(activeTipIDs);
     }
 }

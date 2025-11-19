@@ -16,6 +16,7 @@ public class Control : MonoBehaviour
     public PhysicsCheck physicsCheck;
     private int face;
     public Vector2 inputDirection;
+    public TaskPanel taskPanel;
 
     [Header("参数（非属性系统控制）")]
     public float injuredForce;
@@ -55,6 +56,7 @@ public class Control : MonoBehaviour
         inputActions.Gameplay.Fire.started += Fire;
         inputActions.Gameplay.Interact.started += Interact;
         inputActions.Gameplay.Save.started += Save;
+        inputActions.Gameplay.Task.started += ShowTaskPanel;
     }
 
     private void OnEnable()
@@ -140,6 +142,15 @@ public class Control : MonoBehaviour
     {
         SaveSystemJSON.SavePlayer(GetComponent<Character>());
     }
+
+    private void ShowTaskPanel(InputAction.CallbackContext context)
+    {
+        if (PlayerActionManager.Instance.canTask && taskPanel != null)
+        {
+            taskPanel.TogglePanel();
+        }
+    }
+
 
     private void DetectInteractable()
     {

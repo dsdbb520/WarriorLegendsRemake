@@ -121,6 +121,31 @@ public class ActionTipUI : MonoBehaviour
         activeCoroutines[tipID] = StartCoroutine(FadeOut(tip));
     }
 
+    // 保存当前显示状态并隐藏所有提示，返回显示的 tipID 列表
+    public List<string> HideAllTipsAndReturnActive()
+    {
+        List<string> activeTipIDs = new List<string>();
+        foreach (var tip in tips)
+        {
+            if (tip.tipText != null && tip.tipText.gameObject.activeSelf)
+            {
+                activeTipIDs.Add(tip.tipID);
+                HideTip(tip.tipID);
+            }
+        }
+        return activeTipIDs;
+    }
+
+    // 根据 tipID 列表恢复显示
+    public void RestoreTips(List<string> tipIDs)
+    {
+        foreach (var tipID in tipIDs)
+        {
+            ShowTip(tipID);
+        }
+    }
+
+
     private IEnumerator FadeInOut(TipEntry tip, float duration)
     {
         yield return FadeTo(1f, fadeDuration);
