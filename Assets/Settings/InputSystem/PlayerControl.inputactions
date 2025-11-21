@@ -67,6 +67,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Backpack",
+                    "type": "Button",
+                    "id": "304ceece-4d61-4d27-9fa2-aa7a0606469f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -342,6 +351,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Task",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "716130e3-391d-40b2-ab40-ad03fdf83edf",
+                    "path": "<Keyboard>/b",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Backpack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

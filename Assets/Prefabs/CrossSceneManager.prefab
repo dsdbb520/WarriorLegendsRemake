@@ -157,6 +157,7 @@ MonoBehaviour:
   canJump: 1
   canAttack: 1
   canInteract: 1
+  canTask: 1
 --- !u!1 &4413891960108436660
 GameObject:
   m_ObjectHideFlags: 0

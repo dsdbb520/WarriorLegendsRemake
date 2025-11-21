@@ -153,6 +153,15 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Backpack"",
+                    ""type"": ""Button"",
+                    ""id"": ""304ceece-4d61-4d27-9fa2-aa7a0606469f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -428,6 +437,17 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Task"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""716130e3-391d-40b2-ab40-ad03fdf83edf"",
+                    ""path"": ""<Keyboard>/b"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Backpack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1022,6 +1042,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         m_Gameplay_Interact = m_Gameplay.FindAction("Interact", throwIfNotFound: true);
         m_Gameplay_Save = m_Gameplay.FindAction("Save", throwIfNotFound: true);
         m_Gameplay_Task = m_Gameplay.FindAction("Task", throwIfNotFound: true);
+        m_Gameplay_Backpack = m_Gameplay.FindAction("Backpack", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1122,6 +1143,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Interact;
     private readonly InputAction m_Gameplay_Save;
     private readonly InputAction m_Gameplay_Task;
+    private readonly InputAction m_Gameplay_Backpack;
     /// <summary>
     /// Provides access to input actions defined in input action map "Gameplay".
     /// </summary>
@@ -1161,6 +1183,10 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Gameplay/Task".
         /// </summary>
         public InputAction @Task => m_Wrapper.m_Gameplay_Task;
+        /// <summary>
+        /// Provides access to the underlying input action "Gameplay/Backpack".
+        /// </summary>
+        public InputAction @Backpack => m_Wrapper.m_Gameplay_Backpack;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1208,6 +1234,9 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
             @Task.started += instance.OnTask;
             @Task.performed += instance.OnTask;
             @Task.canceled += instance.OnTask;
+            @Backpack.started += instance.OnBackpack;
+            @Backpack.performed += instance.OnBackpack;
+            @Backpack.canceled += instance.OnBackpack;
         }
 
         /// <summary>
@@ -1240,6 +1269,9 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
             @Task.started -= instance.OnTask;
             @Task.performed -= instance.OnTask;
             @Task.canceled -= instance.OnTask;
+            @Backpack.started -= instance.OnBackpack;
+            @Backpack.performed -= instance.OnBackpack;
+            @Backpack.canceled -= instance.OnBackpack;
         }
 
         /// <summary>
@@ -1589,6 +1621,13 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnTask(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Backpack" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnBackpack(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

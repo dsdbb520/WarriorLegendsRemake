@@ -12,6 +12,7 @@ public class PlayerActionManager : MonoBehaviour
     public bool canAttack = true;
     public bool canInteract = true;
     public bool canTask = true;
+    public bool canBackpack = true;
 
     private void Awake()
     {
@@ -34,6 +35,7 @@ public class PlayerActionManager : MonoBehaviour
         canAttack = false;
         canInteract = false;
         canTask = false;
+        canBackpack = false;
     }
 
     public void EnableAll()
@@ -43,6 +45,7 @@ public class PlayerActionManager : MonoBehaviour
         canAttack = true;
         canInteract = true;
         canTask = true;
+        canBackpack = true;
     }
 
     public void SetAction(string actionName, bool enable)
@@ -63,6 +66,9 @@ public class PlayerActionManager : MonoBehaviour
                 break;
             case "task":
                 canTask = enable;
+                break;
+            case "backpack":
+                canBackpack = enable;
                 break;
             default:
                 Debug.LogWarning("未识别的操作: " + actionName);
@@ -97,6 +103,20 @@ public class PlayerActionManager : MonoBehaviour
         yield return new WaitForSeconds(duration);
         SetAction(actionName, true);
         tempDisableCoroutines.Remove(actionName);
+    }
+
+    #endregion
+
+    #region 只保留指定操作
+
+    /// <summary>
+    /// 只保留指定操作，将其他操作全部禁用。
+    /// </summary>
+    /// <param name="actionName">要保留的操作名称</param>
+    public void EnableOnlyAction(string actionName)
+    {
+        DisableAll();
+        SetAction(actionName, true);
     }
 
     #endregion

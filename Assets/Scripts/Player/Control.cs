@@ -17,6 +17,7 @@ public class Control : MonoBehaviour
     private int face;
     public Vector2 inputDirection;
     public TaskPanel taskPanel;
+    public BackpackPanel backpackPanel;
 
     [Header("参数（非属性系统控制）")]
     public float injuredForce;
@@ -57,6 +58,7 @@ public class Control : MonoBehaviour
         inputActions.Gameplay.Interact.started += Interact;
         inputActions.Gameplay.Save.started += Save;
         inputActions.Gameplay.Task.started += ShowTaskPanel;
+        inputActions.Gameplay.Backpack.started += OpenBackpack;
     }
 
     private void OnEnable()
@@ -148,6 +150,14 @@ public class Control : MonoBehaviour
         if (PlayerActionManager.Instance.canTask && taskPanel != null)
         {
             taskPanel.TogglePanel();
+        }
+    }
+
+    private void OpenBackpack(InputAction.CallbackContext context)
+    {
+        if (backpackPanel != null)
+        {
+            backpackPanel.ToggleBackpack();
         }
     }
 
