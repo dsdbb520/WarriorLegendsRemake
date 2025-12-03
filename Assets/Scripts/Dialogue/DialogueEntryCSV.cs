@@ -8,6 +8,7 @@ public class DialogueEntryCSV
     public string taskID;
     public string taskTitle;
     public string taskDescription;
+    public string taskGoal;
     public string[] dialogueLines;
     public string[] afterAcceptDialogue;
 }

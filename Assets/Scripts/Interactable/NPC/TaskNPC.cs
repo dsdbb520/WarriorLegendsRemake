@@ -13,6 +13,9 @@ public class TaskNPC : MonoBehaviour, IInteractable
     public GameObject taskPopupPrefab;
     private bool hasGivenTask = false;
 
+    [Header("场景联动")]
+    public BlockWall linkedWall;
+
     [Header("交互提示")]
     public GameObject indicatorPrefab;
     [Tooltip("提示在NPC头顶的偏移")]
@@ -141,7 +144,10 @@ public class TaskNPC : MonoBehaviour, IInteractable
         TaskManager.Instance.AddTask(data);   //将任务添加至已接受的任务列表
         if (indicatorInstance != null)
             indicatorInstance.SetActive(false);
-
+        if (linkedWall != null)
+        {
+            linkedWall.Unlock();
+        }
         // 播放任务接受后的对话
         if (data.afterAcceptDialogue != null && data.afterAcceptDialogue.Length > 0)
         {

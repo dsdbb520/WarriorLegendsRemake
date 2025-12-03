@@ -2,16 +2,28 @@
     "entries": [
         {
             "npcName": "TutorialNPC",
-            "taskID": "001",
+            "taskID": "1",
             "taskTitle": "前往村庄",
-            "taskDescription": "\"别问那么多，叫你去就去\"",
+            "taskDescription": "别问为什么，叫你去就去",
+            "taskGoal": "到达村庄",
             "dialogueLines": [
-                "\"你好，冒险者！\"",
-                "\"快去前面的村庄！\""
+                "你好，冒险者！",
+                "快去前面的村庄！"
             ],
             "afterAcceptDialogue": [
-                "\"我在村庄等你！\""
+                "我在村庄等你！"
             ]
+        },
+        {
+            "npcName": "TutorialNPC1",
+            "taskID": "",
+            "taskTitle": "",
+            "taskDescription": "",
+            "taskGoal": "",
+            "dialogueLines": [
+                "测试！"
+            ],
+            "afterAcceptDialogue": []
         }
     ]
 }

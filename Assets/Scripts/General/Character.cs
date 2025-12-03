@@ -106,7 +106,14 @@ public class Character : MonoBehaviour
         }
     }
 
+    public void Heal(float amount)
+    {
+        stats.currentHealth += amount;
+        if (stats.currentHealth > stats.maxHealth) stats.currentHealth = stats.maxHealth;
 
+        OnHealthChange?.Invoke(this); //刷新血条 UI
+        Debug.Log($"玩家回复了 {amount} 点生命");
+    }
 
 
     public void TriggerNoDamage()
