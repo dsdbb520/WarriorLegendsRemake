@@ -29,6 +29,13 @@ public class Control : MonoBehaviour
     public bool isDead;
     public bool isAttack;
     public bool isJump;
+    public bool isDodge;
+
+    [Header("翻滚参数")]
+    public float dodgeForce = 15f;      //翻滚速度
+    public float dodgeDuration = 0.5f;  //翻滚持续时间
+    public float dodgeCooldown = 1f;    //翻滚冷却时间
+    private float lastDodgeTime;
 
     [Header("交互检测")]
     public float interactRange = 1.3f;
@@ -59,6 +66,7 @@ public class Control : MonoBehaviour
         inputActions.Gameplay.Save.started += Save;
         inputActions.Gameplay.Task.started += ShowTaskPanel;
         inputActions.Gameplay.Backpack.started += OpenBackpack;
+        inputActions.Gameplay.Dodge.started += Dodge;
     }
 
     private void OnEnable()
@@ -87,7 +95,7 @@ public class Control : MonoBehaviour
 
     public void Move()
     {
-        if (!PlayerActionManager.Instance.canMove || character == null) return;
+        if (!PlayerActionManager.Instance.canMove || character == null || isDodge) return;
 
         //使用属性系统的移动速度
         float moveSpeed = character.stats.moveSpeed;
@@ -103,7 +111,7 @@ public class Control : MonoBehaviour
 
     private void Jump(InputAction.CallbackContext context)
     {
-        if ((physicsCheck.isGround || (physicsCheck.hangTime < coyoteTime)) && !isJump && PlayerActionManager.Instance.canJump)
+        if ((physicsCheck.isGround || (physicsCheck.hangTime < coyoteTime)) && !isJump && !isDodge && PlayerActionManager.Instance.canJump)
         {
             //使用属性系统的跳跃力
             float jumpPower = character != null ? character.stats.jumpForce : 5f;
@@ -122,7 +130,7 @@ public class Control : MonoBehaviour
 
     private void Fire(InputAction.CallbackContext context)
     {
-        if (!isInjured && PlayerActionManager.Instance.canAttack)
+        if (!isInjured && !isDodge && PlayerActionManager.Instance.canAttack)
         {
             isAttack = true;
             PlayerAnimation.Attack();
@@ -142,7 +150,7 @@ public class Control : MonoBehaviour
 
     private void Save(InputAction.CallbackContext context)
     {
-        SaveSystemJSON.SavePlayer(GetComponent<Character>());
+        SaveSystemJSON.SaveGame();
     }
 
     private void ShowTaskPanel(InputAction.CallbackContext context)
@@ -161,6 +169,55 @@ public class Control : MonoBehaviour
         }
     }
 
+    private void Dodge(InputAction.CallbackContext context)
+    {
+        if (physicsCheck.isGround && !isAttack && !isInjured && !isDodge && Time.time >= lastDodgeTime + dodgeCooldown)
+        {
+            if (PlayerActionManager.Instance.canDodge)
+            {
+                StartCoroutine(DodgeCoroutine());
+            }
+        }
+    }
+
+    private IEnumerator DodgeCoroutine()
+    {
+        isDodge = true;
+        lastDodgeTime = Time.time;
+
+        int originalLayer = gameObject.layer;
+
+        ChangeLayerRecursive(transform, LayerMask.NameToLayer("PlayerDodge"));
+
+        PlayerAnimation.Dodge();
+
+        float noDamageTime1 = character.noDamageTime;
+        character.noDamageTime = dodgeDuration;
+        character.TriggerNoDamage();
+        character.noDamageTime = noDamageTime1;
+
+        //保持当前的朝向翻滚
+        float dir = transform.localScale.x;
+        rb.velocity = new Vector2(dir * dodgeForce, 0);
+
+        yield return new WaitForSeconds(dodgeDuration);
+        ChangeLayerRecursive(transform, originalLayer);
+        isDodge = false;
+        if (inputDirection == Vector2.zero)
+        {
+            rb.velocity = Vector2.zero;
+        }
+    }
+
+    //递归切换所有子物体到layerCode
+    private void ChangeLayerRecursive(Transform trans, int layerCode)
+    {
+        trans.gameObject.layer = layerCode;
+        foreach (Transform child in trans)
+        {
+            ChangeLayerRecursive(child, layerCode);
+        }
+    }
 
     private void DetectInteractable()
     {

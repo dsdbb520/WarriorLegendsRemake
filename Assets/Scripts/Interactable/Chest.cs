@@ -4,6 +4,10 @@ using System.Collections;
 
 public class Chest : MonoBehaviour, IInteractable
 {
+    [Header("持久化设置")]
+    public string objectID;//必须独一无二
+
+
     public bool isOpened = false;
     public Sprite closedSprite;  // 宝箱关闭的图
     public Sprite openSprite;    // 宝箱开启的图
@@ -14,6 +18,19 @@ public class Chest : MonoBehaviour, IInteractable
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = closedSprite; // 初始状态关闭
+    }
+
+    private void Start()
+    {
+        if (!string.IsNullOrEmpty(objectID) && PlayerManager.Instance.IsObjectTriggered(objectID))
+        {
+            isOpened = true;
+            spriteRenderer.sprite = openSprite; //直接显示开箱图
+        }
+        else
+        {
+            spriteRenderer.sprite = closedSprite;
+        }
     }
 
     public void Interact()   //在宝箱旁边按下F键将进入这段函数
@@ -34,7 +51,10 @@ public class Chest : MonoBehaviour, IInteractable
 
         spriteRenderer.sprite = openSprite;
         isOpened = true;
-
+        if (!string.IsNullOrEmpty(objectID))
+        {
+            PlayerManager.Instance.TriggerObject(objectID);
+        }
         Debug.Log("宝箱已打开！");
         // TODO: 掉落奖励逻辑
     }

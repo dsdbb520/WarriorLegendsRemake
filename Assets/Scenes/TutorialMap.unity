@@ -4384,7 +4384,7 @@ BoxCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 384
+    m_Bits: 524672
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -25182,6 +25182,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Chest
       objectReference: {fileID: 0}
+    - target: {fileID: 7087967225623286223, guid: 325e20b677dba1541be425ba254ade05, type: 3}
+      propertyPath: objectID
+      value: Tutorial_Chest
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -26311,9 +26315,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8783705984710277109}
     - target: {fileID: 8742896448378116885, guid: 627c9f92761ab7e468904eecf299f928, type: 3}
+      propertyPath: dodgeForce
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8742896448378116885, guid: 627c9f92761ab7e468904eecf299f928, type: 3}
       propertyPath: backpackPanel
       value: 
       objectReference: {fileID: 2099417388}
+    - target: {fileID: 8742896448378116885, guid: 627c9f92761ab7e468904eecf299f928, type: 3}
+      propertyPath: dodgeDuration
+      value: 0.6
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8451554561505374129, guid: 627c9f92761ab7e468904eecf299f928, type: 3}
     - {fileID: 4248267756349912892, guid: 627c9f92761ab7e468904eecf299f928, type: 3}

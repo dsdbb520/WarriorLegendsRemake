@@ -109,7 +109,7 @@ public class Character : MonoBehaviour
 
 
 
-    private void TriggerNoDamage()
+    public void TriggerNoDamage()
     {
         noDamage = true;
         noDamageCounter = noDamageTime;

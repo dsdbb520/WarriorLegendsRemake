@@ -63,7 +63,7 @@ public class MainMenuManager : MonoBehaviour
             Debug.LogWarning("没有存档可继续游戏！");
             return;
         }
-
+        SaveSystemJSON.IsLoadingFromSave = true;
         // 获取存档的场景名
         string savedScene = SaveSystemJSON.GetSavedScene();
         SceneManager.LoadScene(savedScene);
@@ -99,7 +99,7 @@ public class MainMenuManager : MonoBehaviour
         }
 
         // 读取存档并应用属性和位置
-        SaveSystemJSON.LoadPlayer(player);
+        SaveSystemJSON.LoadGame();
 
         // 计算当前血量百分比
         float healthPercent = player.currentHealth / player.maxHealth;

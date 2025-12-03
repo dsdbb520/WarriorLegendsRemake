@@ -26,4 +26,34 @@ public class TaskManager : MonoBehaviour
             activeTasks.Add(task);
         }
     }
+
+    //获取当前任务的ID列表（用于存档）
+    public List<string> GetTaskIDs()
+    {
+        List<string> ids = new List<string>();
+        foreach (var task in activeTasks)
+        {
+            //组合ID：NPC名字_任务ID
+            ids.Add($"{task.npcName}_{task.taskID}");
+        }
+        return ids;
+    }
+
+    //根据ID列表恢复任务（用于读档）
+    public void LoadTaskIDs(List<string> ids)
+    {
+        activeTasks.Clear();
+        foreach (var fullID in ids)
+        {
+            string[] split = fullID.Split('_');
+            if (split.Length == 2)
+            {
+                var task = DialogueLoader.Instance.GetDialogueCSV(split[0], split[1]);
+                if (task != null)
+                {
+                    AddTask(task);
+                }
+            }
+        }
+    }
 }

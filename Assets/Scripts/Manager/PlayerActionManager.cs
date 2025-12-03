@@ -13,6 +13,7 @@ public class PlayerActionManager : MonoBehaviour
     public bool canInteract = true;
     public bool canTask = true;
     public bool canBackpack = true;
+    public bool canDodge = true;
 
     private void Awake()
     {
@@ -36,6 +37,7 @@ public class PlayerActionManager : MonoBehaviour
         canInteract = false;
         canTask = false;
         canBackpack = false;
+        canDodge = false;
     }
 
     public void EnableAll()
@@ -46,6 +48,7 @@ public class PlayerActionManager : MonoBehaviour
         canInteract = true;
         canTask = true;
         canBackpack = true;
+        canDodge = true;
     }
 
     public void SetAction(string actionName, bool enable)
@@ -69,6 +72,9 @@ public class PlayerActionManager : MonoBehaviour
                 break;
             case "backpack":
                 canBackpack = enable;
+                break;
+            case "dodge":
+                canDodge = enable;
                 break;
             default:
                 Debug.LogWarning("未识别的操作: " + actionName);

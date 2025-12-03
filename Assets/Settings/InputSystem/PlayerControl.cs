@@ -162,6 +162,15 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Dodge"",
+                    ""type"": ""Button"",
+                    ""id"": ""6a27a807-78d3-4ad0-b782-30041d60b354"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -448,6 +457,17 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Backpack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7252b13f-1e9f-4cf5-add3-b42eab070e53"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Dodge"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1043,6 +1063,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         m_Gameplay_Save = m_Gameplay.FindAction("Save", throwIfNotFound: true);
         m_Gameplay_Task = m_Gameplay.FindAction("Task", throwIfNotFound: true);
         m_Gameplay_Backpack = m_Gameplay.FindAction("Backpack", throwIfNotFound: true);
+        m_Gameplay_Dodge = m_Gameplay.FindAction("Dodge", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1144,6 +1165,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Save;
     private readonly InputAction m_Gameplay_Task;
     private readonly InputAction m_Gameplay_Backpack;
+    private readonly InputAction m_Gameplay_Dodge;
     /// <summary>
     /// Provides access to input actions defined in input action map "Gameplay".
     /// </summary>
@@ -1187,6 +1209,10 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Gameplay/Backpack".
         /// </summary>
         public InputAction @Backpack => m_Wrapper.m_Gameplay_Backpack;
+        /// <summary>
+        /// Provides access to the underlying input action "Gameplay/Dodge".
+        /// </summary>
+        public InputAction @Dodge => m_Wrapper.m_Gameplay_Dodge;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1237,6 +1263,9 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
             @Backpack.started += instance.OnBackpack;
             @Backpack.performed += instance.OnBackpack;
             @Backpack.canceled += instance.OnBackpack;
+            @Dodge.started += instance.OnDodge;
+            @Dodge.performed += instance.OnDodge;
+            @Dodge.canceled += instance.OnDodge;
         }
 
         /// <summary>
@@ -1272,6 +1301,9 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
             @Backpack.started -= instance.OnBackpack;
             @Backpack.performed -= instance.OnBackpack;
             @Backpack.canceled -= instance.OnBackpack;
+            @Dodge.started -= instance.OnDodge;
+            @Dodge.performed -= instance.OnDodge;
+            @Dodge.canceled -= instance.OnDodge;
         }
 
         /// <summary>
@@ -1628,6 +1660,13 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnBackpack(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Dodge" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnDodge(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

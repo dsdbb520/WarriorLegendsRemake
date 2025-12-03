@@ -25,26 +25,25 @@ public class SceneInitializer : MonoBehaviour
         GameObject playerObj = playerManager.gameObject;
 
         // 判断是否有存档
-        if (SaveSystemJSON.HasSave())
+        if (SaveSystemJSON.HasSave() && SaveSystemJSON.IsLoadingFromSave)
         {
-            // 获取存档的场景名称
             string savedScene = SaveSystemJSON.GetSavedScene();
 
-            // 如果当前场景与存档中的场景不匹配，则不加载存档位置，而是使用默认出生点
-            if (savedScene != SceneManager.GetActiveScene().name)
+            if (savedScene == SceneManager.GetActiveScene().name)
             {
-                SetPlayerToSpawnPoint(playerManager);
-            }
-            else
-            {
-                // 如果当前场景与存档的场景匹配，读取存档并传送到存档中的位置
-                SaveSystemJSON.LoadPlayer(playerManager.GetComponent<Character>());
+                //读取全局存档（位置、状态等）
+                SaveSystemJSON.LoadGame();
+
                 Debug.Log($"SceneInitializer: 玩家已传送至存档位置 {playerObj.transform.position}");
+
+                //这样下次你再回到这个场景，IsLoadingFromSave 就是 false 了，会跳过这里
+                SaveSystemJSON.IsLoadingFromSave = false;
+                return;
             }
         }
         else
         {
-            // 没有存档，则使用默认出生点或指定的 spawnNameToUse
+            //没有存档，则使用默认出生点或指定的 spawnNameToUse
             SetPlayerToSpawnPoint(playerManager);
         }
     }

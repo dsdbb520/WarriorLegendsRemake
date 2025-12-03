@@ -41,6 +41,11 @@ public class PlayerAnimation : MonoBehaviour
         animator.SetTrigger("Attacking");
     }
 
+    public void Dodge()
+    {
+        animator.SetTrigger("Dodge");
+    }
+
     public void Injurt()
     {
         animator.SetTrigger("Injurt");

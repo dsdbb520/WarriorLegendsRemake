@@ -1,105 +1,100 @@
 using System.IO;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+// 1. 定义总存档结构
 [System.Serializable]
-public class PlayerSaveData
+public class GameSaveData
 {
-    public CharacterStats stats;
-    public Vector3 position;
     public string sceneName;
+    public CharacterStats playerStats;
+    public Vector3 playerPosition;
+    public List<string> worldObjectIDs; // 世界交互状态
+    public List<string> activeTaskIDs;  // 任务状态
 }
 
 public static class SaveSystemJSON
 {
+    public static bool IsLoadingFromSave = false;
     private static string GetSavePath(int slot = 1)
     {
         return Path.Combine(Application.persistentDataPath, $"save{slot}.json");
     }
 
-    // 保存玩家数据
-    public static void SavePlayer(Character player, int slot = 1)
+    //保存游戏
+    public static void SaveGame(int slot = 1)
     {
-        if (player == null)
-        {
-            Debug.LogError("Save failed: player is null!");
-            return;
-        }
+        //获取各个单例中的数据
+        var player = GameObject.FindWithTag("Player")?.GetComponent<Character>();
+        var playerManager = PlayerManager.Instance;
+        var taskManager = TaskManager.Instance;
 
-        PlayerSaveData data = new PlayerSaveData()
+        if (player == null) { Debug.LogError("保存失败：找不到玩家！"); return; }
+
+        //构建存档数据
+        GameSaveData data = new GameSaveData
         {
-            stats = player.stats,
-            position = player.transform.position,
-            sceneName = SceneManager.GetActiveScene().name
+            sceneName = SceneManager.GetActiveScene().name,
+            playerStats = player.stats,
+            playerPosition = player.transform.position,
+            //获取列表
+            worldObjectIDs = playerManager != null ? playerManager.triggeredObjectIDs : new List<string>(),
+            activeTaskIDs = taskManager != null ? taskManager.GetTaskIDs() : new List<string>()
         };
 
+        //写入文件
         string json = JsonUtility.ToJson(data, true);
         File.WriteAllText(GetSavePath(slot), json);
-        string path = Application.persistentDataPath + $"/save{slot}.json";
-        Debug.Log($"存档已保存到 {path}: 场景={data.sceneName}, 坐标=({data.position.x:F2},{data.position.y:F2},{data.position.z:F2})");
+        Debug.Log($"游戏保存成功！Slot: {slot}");
     }
 
-    // 加载玩家数据
-    public static void LoadPlayer(Character player, int slot = 1)
+    //加载游戏
+    public static void LoadGame(int slot = 1)
     {
         string path = GetSavePath(slot);
-        if (!File.Exists(path))
-        {
-            Debug.LogWarning("没有可用存档！");
-            return;
-        }
+        if (!File.Exists(path)) return;
 
         string json = File.ReadAllText(path);
-        PlayerSaveData data = JsonUtility.FromJson<PlayerSaveData>(json);
+        GameSaveData data = JsonUtility.FromJson<GameSaveData>(json);
 
-        if (player == null)
+        //恢复玩家数据
+        var player = GameObject.FindWithTag("Player")?.GetComponent<Character>();
+        if (player != null)
         {
-            Debug.LogError("Load failed: player is null!");
-            return;
+            player.stats = data.playerStats;
+            player.transform.position = data.playerPosition;
+            //刷新UI
+            if (player.playStatBar != null) player.OnHealthChange?.Invoke(player);
         }
 
-        // 安全赋值，逐字段更新
-        player.stats.maxHealth = data.stats.maxHealth;
-        player.stats.currentHealth = data.stats.currentHealth;
-        player.stats.attack = data.stats.attack;
-        player.stats.defense = data.stats.defense;
-        player.stats.moveSpeed = data.stats.moveSpeed;
-        player.stats.jumpForce = data.stats.jumpForce;
+        //恢复世界状态 (把读取的列表塞回PlayerManager)
+        if (PlayerManager.Instance != null)
+        {
+            PlayerManager.Instance.triggeredObjectIDs = data.worldObjectIDs;
+        }
 
-        // 设置玩家坐标
-        player.transform.position = data.position;
+        //恢复任务状态
+        if (TaskManager.Instance != null)
+        {
+            TaskManager.Instance.LoadTaskIDs(data.activeTaskIDs);
+        }
 
-        Debug.Log($"存档读取成功: 场景={data.sceneName}, 坐标=({data.position.x:F2},{data.position.y:F2},{data.position.z:F2})");
+        Debug.Log("游戏读取成功！");
     }
 
+    public static bool HasSave(int slot = 1) => File.Exists(GetSavePath(slot));
 
-    // 获取存档场景名，主菜单读档时使用
     public static string GetSavedScene(int slot = 1)
     {
         string path = GetSavePath(slot);
-        if (!File.Exists(path)) return "GameScene";
+        if (!File.Exists(path)) return null;
         string json = File.ReadAllText(path);
-        PlayerSaveData data = JsonUtility.FromJson<PlayerSaveData>(json);
-        return data.sceneName;
+        return JsonUtility.FromJson<GameSaveData>(json).sceneName;
     }
 
-    // 是否存在存档
-    public static bool HasSave(int slot = 1)
-    {
-        return File.Exists(GetSavePath(slot));
-    }
-
-    // 删除存档
     public static void ClearSave(int slot = 1)
     {
-        string path = GetSavePath(slot);
-        if (File.Exists(path))
-        {
-            File.Delete(path);
-            Debug.Log($"存档 save{slot}.json 已删除");
-        }
+        if (HasSave(slot)) File.Delete(GetSavePath(slot));
     }
 }
-
-//示例代码
-//SaveSystemJSON.SavePlayer(playerCharacter, slot: 2);
