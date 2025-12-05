@@ -1,6 +1,6 @@
-﻿npcName,type,content,taskID,taskTitle,taskDescription,taskGoal
-TutorialNPC,dialogueLines,你好，冒险者！,1,,,
-TutorialNPC,dialogueLines,快去前面的村庄！,1,,,
-TutorialNPC,task,,1,前往村庄,别问为什么，叫你去就去,到达村庄
-TutorialNPC,afterAcceptDialogue,我在村庄等你！,1,,,
-TutorialNPC1,dialogueLines,测试！,,,,
+﻿npcName,type,content,taskID,taskTitle,taskDescription,taskGoal,targetID,targetAmount
+TutorialNPC,dialogueLines,你好，冒险者！,1,,,,,
+TutorialNPC,dialogueLines,快去前面的村庄！,1,,,,,
+TutorialNPC,task,,1,前往村庄,别问为什么，叫你去就去,到达村庄,Arrive_Village,1
+TutorialNPC,afterAcceptDialogue,我在村庄等你！,1,,,,,
+TutorialNPC1,dialogueLines,测试！,,,,,,

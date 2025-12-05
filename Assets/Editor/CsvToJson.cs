@@ -60,20 +60,11 @@ public class CsvToJson : EditorWindow
                 }
             }
 
-            // 格式检查
-            if (cols.Length < 7)
+            // 格式检查 (至少需要6列，算上taskGoal是7列)
+            if (cols.Length < 6)
             {
-                if (cols.Length == 6)
-                {
-                    var newCols = new List<string>(cols);
-                    newCols.Add("");
-                    cols = newCols.ToArray();
-                }
-                else
-                {
-                    Debug.LogWarning($"跳过格式错误的行 (行号 {i + 1}): {line}");
-                    continue;
-                }
+                Debug.LogWarning($"跳过格式错误的行 (行号 {i + 1}): {line}");
+                continue;
             }
 
             // 数据映射
@@ -83,7 +74,13 @@ public class CsvToJson : EditorWindow
             string taskID = cols[3];
             string taskTitle = cols[4];
             string taskDescription = cols[5];
-            string taskGoal = cols[6];
+            string taskGoal = (cols.Length > 6) ? cols[6] : "";
+            string targetID = (cols.Length > 7) ? cols[7] : "";
+            int targetAmount = 0;
+            if (cols.Length > 8 && int.TryParse(cols[8], out int amount))
+            {
+                targetAmount = amount;
+            }
 
             string key = string.IsNullOrEmpty(taskID) ? npcName : $"{npcName}_{taskID}";
 
@@ -96,6 +93,8 @@ public class CsvToJson : EditorWindow
                     taskTitle = taskTitle,
                     taskDescription = taskDescription,
                     taskGoal = taskGoal,
+                    targetID = targetID,
+                    targetAmount = targetAmount,
                     dialogueLines = new string[0],
                     afterAcceptDialogue = new string[0]
                 };
@@ -122,10 +121,13 @@ public class CsvToJson : EditorWindow
                     entry.taskTitle = taskTitle;
                     entry.taskDescription = taskDescription;
                     entry.taskGoal = taskGoal;
+                    entry.targetID = targetID;
+                    entry.targetAmount = targetAmount;
                     break;
             }
         }
 
+        // 使用正确的类名 DialogueDatabaseCSV
         DialogueDatabaseCSV db = new DialogueDatabaseCSV
         {
             entries = new List<DialogueEntryCSV>(dict.Values).ToArray()

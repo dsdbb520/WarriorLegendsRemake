@@ -35,6 +35,8 @@ public class Enemy : MonoBehaviour
     public LayerMask attackLayer;
     public LayerMask wallLayer;
 
+    [Header("任务识别")]
+    public string enemyID;
 
     protected BaseState chaseState;
     protected BaseState patrolState;
@@ -188,9 +190,15 @@ public class Enemy : MonoBehaviour
 
     public void EnemyDead()
     {
+        if (isDead) return;
+
         gameObject.layer = 2;
         isDead = true;
         animator.SetBool("isDead", true);
+        if (TaskManager.Instance != null)
+        {
+            TaskManager.Instance.UpdateTaskProgress(enemyID, 1);
+        }
     }
     public void DestroyObj()
     {

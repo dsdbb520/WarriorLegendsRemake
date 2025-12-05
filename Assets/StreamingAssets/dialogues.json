@@ -6,6 +6,8 @@
             "taskTitle": "前往村庄",
             "taskDescription": "别问为什么，叫你去就去",
             "taskGoal": "到达村庄",
+            "targetID": "Arrive_Village",
+            "targetAmount": 1,
             "dialogueLines": [
                 "你好，冒险者！",
                 "快去前面的村庄！"
@@ -20,6 +22,8 @@
             "taskTitle": "",
             "taskDescription": "",
             "taskGoal": "",
+            "targetID": "",
+            "targetAmount": 0,
             "dialogueLines": [
                 "测试！"
             ],

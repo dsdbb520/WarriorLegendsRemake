@@ -26,11 +26,26 @@ public class TaskDetailPopup : MonoBehaviour
 
         // 更新文本显示
         if (titleText != null) titleText.text = task.taskTitle;
-
         if (descText != null) descText.text = task.taskDescription;
-
         if (goalText != null)
-            goalText.text = string.IsNullOrEmpty(task.taskGoal) ? "目标：查看详情" : task.taskGoal;
+        {
+            // 获取当前进度
+            int current = TaskManager.Instance.GetProgress(task.taskID);
+            int target = task.targetAmount;
+            bool isFinished = TaskManager.Instance.IsFinished(task.taskID);
+
+            if (isFinished)
+            {
+                goalText.text = $"<color=green>已完成</color>";
+            }
+            else
+            {
+                if (target > 0)
+                    goalText.text = $"目标：{task.taskGoal} ({current}/{target})";
+                else
+                    goalText.text = $"目标：{task.taskGoal}";
+            }
+        }
     }
 
     public void Hide()

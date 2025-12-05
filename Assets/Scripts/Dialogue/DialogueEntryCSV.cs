@@ -9,6 +9,8 @@ public class DialogueEntryCSV
     public string taskTitle;
     public string taskDescription;
     public string taskGoal;
+    public string targetID;
+    public int targetAmount;
     public string[] dialogueLines;
     public string[] afterAcceptDialogue;
 }
