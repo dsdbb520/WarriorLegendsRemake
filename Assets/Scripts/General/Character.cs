@@ -21,6 +21,7 @@ public class CharacterStats
     public float jumpForce = 5f;
 }
 
+
 public class Character : MonoBehaviour
 {
     [Header("阵营设置")]
@@ -29,6 +30,11 @@ public class Character : MonoBehaviour
     [Header("核心属性")]
     public CharacterStats stats = new CharacterStats();
     public PlayStatBar playStatBar;
+
+    [Header("Shader 效果")]
+    private SpriteRenderer spriteRenderer;
+    private MaterialPropertyBlock propBlock;
+    private int flashAmountID;
 
     public float maxHealth => stats.maxHealth;    // 兼容旧UI
     public float currentHealth => stats.currentHealth;
@@ -44,6 +50,13 @@ public class Character : MonoBehaviour
     public UnityEvent<Character> OnHealthChange;
     public UnityEvent<Transform> OnTakeDamage;
     public UnityEvent<Transform> Dead;
+
+    private void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        propBlock = new MaterialPropertyBlock();
+        flashAmountID = Shader.PropertyToID("_FlashAmount");
+    }
 
     private void Start()
     {
@@ -95,6 +108,7 @@ public class Character : MonoBehaviour
 
         // 触发受击事件
         OnTakeDamage?.Invoke(attacker ? attacker.transform : null);
+        StartCoroutine(FlashEffect());
         Debug.Log($"[TakeDamage] OnTakeDamage invoked by {attacker?.gameObject.name}");
 
         // 死亡处理
@@ -103,6 +117,42 @@ public class Character : MonoBehaviour
             stats.currentHealth = 0;
             Dead?.Invoke(attacker ? attacker.transform : null);
             Debug.Log($"[TakeDamage] {gameObject.name} died.");
+        }
+    }
+
+    private IEnumerator FlashEffect()
+    {
+        while (noDamage)
+        {
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.GetPropertyBlock(propBlock);
+                propBlock.SetFloat(flashAmountID, 1f); 
+                spriteRenderer.SetPropertyBlock(propBlock);
+
+                yield return new WaitForSeconds(0.2f); //变白持续时间
+
+                spriteRenderer.GetPropertyBlock(propBlock);
+                propBlock.SetFloat(flashAmountID, 0f);
+                spriteRenderer.SetPropertyBlock(propBlock);
+
+                yield return new WaitForSeconds(0.2f);
+            }
+            else
+            {
+                yield return null;
+            }
+        }
+
+        if (spriteRenderer != null)
+        {
+            Color c = spriteRenderer.color;
+            c.a = 1f;
+            spriteRenderer.color = c;
+
+            spriteRenderer.GetPropertyBlock(propBlock);
+            propBlock.SetFloat(flashAmountID, 0f);
+            spriteRenderer.SetPropertyBlock(propBlock);
         }
     }
 
