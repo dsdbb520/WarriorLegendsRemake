@@ -42,6 +42,10 @@ public class Enemy : MonoBehaviour
     protected BaseState patrolState;
     private BaseState currentState;
 
+    private MaterialPropertyBlock propBlock;
+    private int dissolveID;
+    private SpriteRenderer spriteRenderer;
+
 
 
     private void OnEnable()
@@ -58,6 +62,9 @@ public class Enemy : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         physicsCheck = GetComponent<PhysicsCheck>();
         character = GetComponent<Character>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        propBlock = new MaterialPropertyBlock();
+        dissolveID = Shader.PropertyToID("_DissolveAmount");
         currectSpeed = normalSpeed;
     }
 
@@ -109,7 +116,7 @@ public class Enemy : MonoBehaviour
         }
 
 
-        // ---- 撞墙回头 ----
+        //撞墙回头
         if ((physicsCheck.touchedLeftWall || physicsCheck.touchedRightWall || !physicsCheck.isGround) && !hasTurned)
         {
             Turn();                                 // 转身
@@ -119,20 +126,20 @@ public class Enemy : MonoBehaviour
             wait = false;
         }
 
-        // ---- 随机时间到也回头 ----
+        //随机时间到也回头
         if (waitTimeCounter <= 0)
         {
-            if (currentState == chaseState) return;      // 如果当前是追击状态，直接跳过计时
+            if (currentState == chaseState) return;      //如果当前是追击状态，直接跳过计时
             if (wait)
             {
-                Turn();                              // 转身
-                waitTime = Random.Range(2f, 4f);   // 停下后的随机等待时间
+                Turn();                              //转身
+                waitTime = Random.Range(2f, 4f);   //停下后的随机等待时间
             }
             else
-                waitTime = Random.Range(1f, 2f);   // 移动后的随机时间
-            waitTimeCounter = waitTime;            // 重置计时器
-            wait = !wait;                           // 切换等待/移动状态
-            hasTurned = false;                      // 重置碰墙标志，允许下一次触发
+                waitTime = Random.Range(1f, 2f);   //移动后的随机时间
+            waitTimeCounter = waitTime;            //重置计时器
+            wait = !wait;                           //切换等待/移动状态
+            hasTurned = false;                      //重置碰墙标志，允许下一次触发
         }
     }
 
@@ -199,10 +206,31 @@ public class Enemy : MonoBehaviour
         {
             TaskManager.Instance.UpdateTaskProgress(enemyID, 1);
         }
+        StartCoroutine(DissolveAndDestroy());
     }
-    public void DestroyObj()
+
+    private IEnumerator DissolveAndDestroy()
     {
-        Destroy(this.gameObject);
+        yield return new WaitForSeconds(0.5f);
+
+        float counter = 0f;
+        float duration = 1f; //溶解持续1秒
+
+        while (counter < duration)
+        {
+            counter += Time.deltaTime;
+            float val = Mathf.Lerp(0f, 1.1f, counter / duration); //确保完全消散
+
+            //设置Shader属性
+            spriteRenderer.GetPropertyBlock(propBlock);
+            propBlock.SetFloat(dissolveID, val);
+            spriteRenderer.SetPropertyBlock(propBlock);
+
+            yield return null;
+        }
+
+        //销毁物体
+        Destroy(gameObject);
     }
 
 

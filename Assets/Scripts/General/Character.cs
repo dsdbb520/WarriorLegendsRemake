@@ -99,6 +99,14 @@ public class Character : MonoBehaviour
         stats.currentHealth -= damageTaken;
         Debug.Log($"[TakeDamage] {gameObject.name} took {damageTaken} damage. New Health: {stats.currentHealth}");
 
+        // 死亡处理
+        if (stats.currentHealth <= 0)
+        {
+            stats.currentHealth = 0;
+            Dead?.Invoke(attacker ? attacker.transform : null);
+            Debug.Log($"[TakeDamage] {gameObject.name} died.");
+        }
+
         // 只在首次受到伤害时触发无敌时间
         if (!noDamage)
         {
@@ -111,13 +119,6 @@ public class Character : MonoBehaviour
         StartCoroutine(FlashEffect());
         Debug.Log($"[TakeDamage] OnTakeDamage invoked by {attacker?.gameObject.name}");
 
-        // 死亡处理
-        if (stats.currentHealth <= 0)
-        {
-            stats.currentHealth = 0;
-            Dead?.Invoke(attacker ? attacker.transform : null);
-            Debug.Log($"[TakeDamage] {gameObject.name} died.");
-        }
     }
 
     private IEnumerator FlashEffect()

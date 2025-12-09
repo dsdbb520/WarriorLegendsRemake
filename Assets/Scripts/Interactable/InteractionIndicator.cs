@@ -17,6 +17,19 @@ public class InteractionIndicator : MonoBehaviour
     [Header("提示符相对位置偏移")]
     public Vector3 offset = new Vector3(0, 1.5f, 0);
 
+    [Header("Shader 流光效果")]
+    private SpriteRenderer parentRenderer;
+    private MaterialPropertyBlock propBlock;
+    private int activeID;
+
+
+    private void Awake()
+    {
+        parentRenderer = GetComponent<SpriteRenderer>();
+        propBlock = new MaterialPropertyBlock();
+        activeID = Shader.PropertyToID("_Active");
+    }
+
     // 调用：显示提示符
     public void Show()
     {
@@ -32,6 +45,7 @@ public class InteractionIndicator : MonoBehaviour
         {
             indicatorInstance.SetActive(true);
         }
+        SetShaderActive(1f);
     }
 
     // 调用：隐藏提示符
@@ -39,6 +53,7 @@ public class InteractionIndicator : MonoBehaviour
     {
         if (indicatorInstance != null)
             indicatorInstance.SetActive(false);
+        SetShaderActive(0f);
     }
 
     // 调用：物体被交互后（例如宝箱打开）
@@ -47,6 +62,7 @@ public class InteractionIndicator : MonoBehaviour
         hasBeenInteracted = true;
         if (autoHideAfterInteract && indicatorInstance != null)
             indicatorInstance.SetActive(false);
+        SetShaderActive(0f);
     }
 
     // 可选：重置状态（如果需要重复交互）
@@ -58,5 +74,15 @@ public class InteractionIndicator : MonoBehaviour
 
         if (indicatorInstance != null)
             indicatorInstance.SetActive(true);
+    }
+
+    private void SetShaderActive(float val)
+    {
+        if (parentRenderer != null)
+        {
+            parentRenderer.GetPropertyBlock(propBlock);
+            propBlock.SetFloat(activeID, val);
+            parentRenderer.SetPropertyBlock(propBlock);
+        }
     }
 }
