@@ -4,3 +4,6 @@ TutorialNPC,dialogueLines,快去前面的村庄！,1,,,,,
 TutorialNPC,task,,1,前往村庄,别问为什么，叫你去就去,到达村庄,Arrive_Village,1
 TutorialNPC,afterAcceptDialogue,我在村庄等你！,1,,,,,
 TutorialNPC1,dialogueLines,测试！,,,,,,
+PlayerSelf,dialogueLines,头好痛... 这里是哪里？,,,,,,
+PlayerSelf,dialogueLines,空气中有一股奇怪的味道,,,,,,
+PlayerSelf,dialogueLines,我得去前面看看,,,,,,

@@ -28,6 +28,21 @@
                 "测试！"
             ],
             "afterAcceptDialogue": []
+        },
+        {
+            "npcName": "PlayerSelf",
+            "taskID": "",
+            "taskTitle": "",
+            "taskDescription": "",
+            "taskGoal": "",
+            "targetID": "",
+            "targetAmount": 0,
+            "dialogueLines": [
+                "头好痛... 这里是哪里？",
+                "空气中有一股奇怪的味道",
+                "我得去前面看看"
+            ],
+            "afterAcceptDialogue": []
         }
     ]
 }
