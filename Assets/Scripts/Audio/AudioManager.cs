@@ -40,7 +40,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    // 播放背景音乐
+    //播放背景音乐
     public void PlayBGM(AudioClip clip, bool loop = true)
     {
         if (clip == null) return;
@@ -49,24 +49,24 @@ public class AudioManager : MonoBehaviour
         bgmSource.Play();
     }
 
-    // 停止背景音乐
+    //停止背景音乐
     public void StopBGM()
     {
         bgmSource.Stop();
     }
 
-    // 播放单次音效
+    //播放单次音效
     public void PlaySFX(AudioClip clip)
     {
         if (clip == null) return;
         sfxSource.PlayOneShot(clip);
     }
 
-    // 调节音量（可连接 UI 滑条）
+    //调节音量（可连接 UI 滑条）
     public void SetVolume(string parameter, float volume)
     {
-        // parameter 例如："MasterVolume"、"BGMVolume"、"SFXVolume"
-        // volume 范围 0.0001f ~ 1f
+        //parameter例如："MasterVolume"、"BGMVolume"、"SFXVolume"
+        //volume范围 0.0001f ~ 1f
         audioMixer.SetFloat(parameter, Mathf.Log10(volume) * 20);
     }
 

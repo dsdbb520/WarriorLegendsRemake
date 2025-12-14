@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PlayStatBar : MonoBehaviour
 {
-    // Start is called before the first frame update
+
     public Image healthImage;
 
     public Image healthSlowImage;

@@ -9,7 +9,7 @@ public class TaskNPC : MonoBehaviour, IInteractable
     public string npcName;
 
     [Header("任务相关")]
-    public string taskID;               // Inspector 指定这次任务ID
+    public string taskID;               //指定这次任务ID
     public GameObject taskPopupPrefab;
     private bool hasGivenTask = false;
 
@@ -24,7 +24,7 @@ public class TaskNPC : MonoBehaviour, IInteractable
     public Vector3 indicatorScale = Vector3.one;
 
     private GameObject indicatorInstance;
-    private List<string> activeTipIDs; // 记录当前显示的 Tip
+    private List<string> activeTipIDs; //记录当前显示的Tip
     private bool isTalking = false;
 
     private void Start()
@@ -46,14 +46,14 @@ public class TaskNPC : MonoBehaviour, IInteractable
 
         isTalking = true;
 
-        // 关闭所有 Tip，并记录当前显示状态
+        //关闭所有Tip，并记录当前显示状态
         if (ActionTipUI.Instance != null)
             activeTipIDs = ActionTipUI.Instance.HideAllTipsAndReturnActive();
 
 
         PlayerActionManager.Instance.DisableAll();
 
-        // 获取 CSV 对话数据
+        //获取对话数据
         DialogueEntryCSV data = DialogueLoader.Instance.GetDialogueCSV(npcName, taskID);
         if (data == null)
         {
@@ -63,7 +63,7 @@ public class TaskNPC : MonoBehaviour, IInteractable
             return;
         }
 
-        // 播放初始对话
+        //播放初始对话
         if (data.dialogueLines != null && data.dialogueLines.Length > 0)
             DialogueManager.Instance.StartDialogue(npcName, data.dialogueLines);
 
@@ -72,39 +72,21 @@ public class TaskNPC : MonoBehaviour, IInteractable
 
     private IEnumerator WaitForDialogueThenShowTask(DialogueEntryCSV data)
     {
-        // 记录当前显示状态
-        Dictionary<string, bool> tipStates = new Dictionary<string, bool>();
         if (ActionTipUI.Instance != null)
-        {
-            foreach (var tip in ActionTipUI.Instance.tips)
-            {
-                tipStates[tip.tipID] = tip.tipText.gameObject.activeSelf;
-                ActionTipUI.Instance.HideTip(tip.tipID);
-            }
-        }
+            activeTipIDs = ActionTipUI.Instance.HideAllTipsAndReturnActive();
 
         PlayerActionManager.Instance.DisableAll();
 
-        // 等待对话结束
+        //等待对话结束
         yield return new WaitUntil(() => DialogueManager.Instance.dialoguePanel.activeSelf == false);
 
-        // 弹出任务窗口
+        //弹出任务窗口
         ShowTaskPopup(data);
         isTalking = false;
 
-        // 对话结束后恢复原本显示的提示
-        if (ActionTipUI.Instance != null)
-        {
-            foreach (var tip in ActionTipUI.Instance.tips)
-            {
-                if (tipStates.TryGetValue(tip.tipID, out bool wasActive) && wasActive)
-                {
-                    tip.tipText.gameObject.SetActive(true);
-                    if (tip.backgroundRect != null)
-                        tip.backgroundRect.gameObject.SetActive(true);
-                }
-            }
-        }
+        //对话结束后恢复原本显示的提示
+        if (ActionTipUI.Instance != null && activeTipIDs != null)
+            ActionTipUI.Instance.RestoreTips(activeTipIDs);
     }
 
 
@@ -112,21 +94,19 @@ public class TaskNPC : MonoBehaviour, IInteractable
     {
         if (taskPopupPrefab == null) return;
 
-        // 实例化 Prefab，不指定 parent
         var popupGO = Instantiate(taskPopupPrefab);
 
-        // 获取脚本组件
+        //获取脚本组件
         var popup = popupGO.GetComponent<TaskPopup>();
 
-        // 保证 Canvas 排序在最前
         Canvas popupCanvas = popupGO.GetComponent<Canvas>();
         if (popupCanvas != null)
         {
             popupCanvas.overrideSorting = true;
-            popupCanvas.sortingOrder = 999; // 根据需要调整
+            popupCanvas.sortingOrder = 999;
         }
 
-        // 设置任务内容和按钮回调
+        //设置任务内容和按钮回调
         popup.Setup(
             string.IsNullOrEmpty(data.taskTitle) ? "任务" : data.taskTitle,
             string.IsNullOrEmpty(data.taskDescription) ? "" : data.taskDescription,
@@ -148,7 +128,7 @@ public class TaskNPC : MonoBehaviour, IInteractable
         {
             linkedWall.Unlock();
         }
-        // 播放任务接受后的对话
+        //播放任务接受后的对话
         if (data.afterAcceptDialogue != null && data.afterAcceptDialogue.Length > 0)
         {
             DialogueManager.Instance.StartDialogue(data.npcName, data.afterAcceptDialogue);
@@ -157,7 +137,7 @@ public class TaskNPC : MonoBehaviour, IInteractable
         else
         {
             PlayerActionManager.Instance.EnableAll();
-            // 恢复 Tip
+            //恢复Tip
             if (ActionTipUI.Instance != null && activeTipIDs != null)
                 ActionTipUI.Instance.RestoreTips(activeTipIDs);
         }

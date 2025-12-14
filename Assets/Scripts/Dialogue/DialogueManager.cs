@@ -1,8 +1,9 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
-using UnityEngine.InputSystem; // 新输入系统
+using UnityEngine.InputSystem;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -11,10 +12,10 @@ public class DialogueManager : MonoBehaviour
     [Header("UI引用")]
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI contentText;
-    public GameObject dialoguePanel; // 包含背景和文本
-    public Image backgroundImage;    // 对话背景 Image
+    public GameObject dialoguePanel; //包含背景和文本
+    public Image backgroundImage;    //对话背景Image
     public float typingSpeed = 0.03f;
-    public float fadeDuration = 0.3f; // 背景淡入淡出时间
+    public float fadeDuration = 0.3f; //背景淡入淡出时间
 
     private string[] currentLines;
     private int currentIndex;
@@ -22,6 +23,8 @@ public class DialogueManager : MonoBehaviour
     private bool skipTyping;
 
     private CanvasGroup canvasGroup;
+
+    private System.Action onDialogueFinishedCallback;
 
     private void Awake()
     {
@@ -37,19 +40,29 @@ public class DialogueManager : MonoBehaviour
         dialoguePanel.SetActive(false);
     }
 
-    public void StartDialogue(string npcName, string[] lines)
+    public void StartDialogue(string npcName, string[] lines, System.Action callback = null)
     {
         if (lines == null || lines.Length == 0)
             return;
-
+        RectTransform rect = dialoguePanel.GetComponent<RectTransform>();
+        if (npcName == "PlayerSelf")
+        {
+            rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, 84f);
+        }
+        else
+        {
+            rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, 0f);
+        }
+        onDialogueFinishedCallback = callback;
         nameText.text = npcName;
         currentLines = lines;
         currentIndex = 0;
-
         dialoguePanel.SetActive(true);
         StartCoroutine(FadeInPanel());
         StartCoroutine(DisplayLine());
     }
+
+
 
     private IEnumerator FadeInPanel()
     {
@@ -76,6 +89,8 @@ public class DialogueManager : MonoBehaviour
         }
         canvasGroup.alpha = 0f;
         dialoguePanel.SetActive(false);
+        onDialogueFinishedCallback?.Invoke();
+        onDialogueFinishedCallback = null;
     }
 
     private IEnumerator DisplayLine()
@@ -101,7 +116,7 @@ public class DialogueManager : MonoBehaviour
         isTyping = false;
         skipTyping = false;
 
-        // 使用新输入系统等待空格键
+        //使用新输入系统等待空格键
         yield return new WaitUntil(() => Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame);
 
         NextLine();
