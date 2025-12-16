@@ -14,6 +14,7 @@ public class PhysicsCheck : MonoBehaviour
     public float hangTime;
     [Header("ºÏ≤‚∑∂Œß")]
     public float checkRaduis;
+    public float isGroundAnimationCheckRaduis;
     public LayerMask groundLayer;
     public Vector2 bottomOffset;
     public Vector2 leftOffset;
@@ -46,7 +47,7 @@ public class PhysicsCheck : MonoBehaviour
     {
         //ºÏ≤‚µÿ√Ê
         isGround = Physics2D.OverlapCircle((Vector2)transform.position + bottomOffset, checkRaduis, groundLayer);   
-        isGroundAnimation = Physics2D.OverlapCircle((Vector2)transform.position + bottomOffset, checkRaduis + 1.4f, groundLayer);
+        isGroundAnimation = Physics2D.OverlapCircle((Vector2)transform.position + bottomOffset, checkRaduis + isGroundAnimationCheckRaduis, groundLayer);
         touchedLeftWall = Physics2D.OverlapCircle((Vector2)transform.position + leftOffset, checkRaduis, groundLayer);
         touchedRightWall = Physics2D.OverlapCircle((Vector2)transform.position + rightOffset, checkRaduis, groundLayer);
     }

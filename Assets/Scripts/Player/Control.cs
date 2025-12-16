@@ -1,6 +1,8 @@
+using Spine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -30,12 +32,16 @@ public class Control : MonoBehaviour
     public bool isAttack;
     public bool isJump;
     public bool isDodge;
+    public bool isRunning;
 
     [Header("翻滚参数")]
     public float dodgeForce = 15f;      //翻滚速度
     public float dodgeDuration = 0.5f;  //翻滚持续时间
     public float dodgeCooldown = 1f;    //翻滚冷却时间
     private float lastDodgeTime;
+
+    [Header("奔跑参数")]
+    public float runSpeedMultiplier = 2.0f;
 
     [Header("交互检测")]
     public float interactRange = 1.3f;
@@ -44,7 +50,7 @@ public class Control : MonoBehaviour
     private IInteractable currentTarget;
 
     private Character character;
-
+    private bool canEarlyMove = false;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -66,7 +72,10 @@ public class Control : MonoBehaviour
         inputActions.Gameplay.Save.started += Save;
         inputActions.Gameplay.Task.started += ShowTaskPanel;
         inputActions.Gameplay.Backpack.started += OpenBackpack;
-        inputActions.Gameplay.Dodge.started += Dodge;
+        inputActions.Gameplay.Shoot.started += Shoot;
+        //inputActions.Gameplay.Dodge.started += Dodge;
+        inputActions.Gameplay.Dodge.performed += ctx => isRunning = true;
+        inputActions.Gameplay.Dodge.canceled += ctx => isRunning = false;
     }
 
     private void OnEnable()
@@ -87,6 +96,16 @@ public class Control : MonoBehaviour
 
     private void FixedUpdate()
     {
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        if (stateInfo.IsTag("LockMovement") && !canEarlyMove)
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y);
+            return;
+        }
+        if (!stateInfo.IsTag("LockMovement"))
+        {
+            canEarlyMove = false;
+        }
         if (!isInjured && !isAttack)
         {
             Move();
@@ -98,15 +117,24 @@ public class Control : MonoBehaviour
         if (!PlayerActionManager.Instance.canMove || character == null || isDodge) return;
 
         //使用属性系统的移动速度
-        float moveSpeed = character.stats.moveSpeed;
+        float currentSpeed = character.stats.moveSpeed;
+        if (isRunning && inputDirection.x != 0)
+        {
+            currentSpeed *= runSpeedMultiplier;
+        }
 
-        rb.velocity = new Vector2(inputDirection.x * moveSpeed * Time.deltaTime, rb.velocity.y);
+        rb.velocity = new Vector2(inputDirection.x * currentSpeed * Time.deltaTime, rb.velocity.y);
 
-        face = (int)transform.localScale.x;
-        if (inputDirection.x < 0) face = -1;
-        if (inputDirection.x > 0) face = 1;
-
-        transform.localScale = new Vector3(face, 1, 1);
+        float scaleX = Mathf.Abs(transform.localScale.x);
+        if (inputDirection.x < 0)
+        {
+            transform.localScale = new Vector3(-scaleX, transform.localScale.y, transform.localScale.z);
+        }
+        else if (inputDirection.x > 0)
+        {
+            transform.localScale = new Vector3(scaleX, transform.localScale.y, transform.localScale.z);
+        }
+        face = (int)Mathf.Sign(transform.localScale.x);
     }
 
     private void Jump(InputAction.CallbackContext context)
@@ -134,8 +162,15 @@ public class Control : MonoBehaviour
         {
             isAttack = true;
             PlayerAnimation.Attack();
-            Vector2 atkDir = new Vector2(transform.localScale.x, 0);
-            rb.AddForce(atkDir * attackForce, ForceMode2D.Impulse);
+        }
+    }
+
+    private void Shoot(InputAction.CallbackContext context)
+    {
+        if (physicsCheck.isGround && !isInjured && PlayerActionManager.Instance.canAttack)
+        {
+            isAttack = true;
+            PlayerAnimation.Shoot();
         }
     }
 
@@ -237,9 +272,6 @@ public class Control : MonoBehaviour
         }
     }
 
-
-
-
     public void GetInjured(Transform attacker)
     {
         isInjured = true;
@@ -252,6 +284,18 @@ public class Control : MonoBehaviour
     {
         isDead = true;
         inputActions.Gameplay.Disable();
+    }
+
+    public void EnableEarlyMove()    //动画事件：允许打断动画开始移动
+    {
+        canEarlyMove = true;
+    }
+
+    public void AddAttackImpulse()   //动画事件：攻击时施加一个向前的力
+    {
+        rb.velocity = new Vector2(0, rb.velocity.y);
+        Vector2 atkDir = new Vector2(transform.localScale.x, 0);
+        rb.AddForce(atkDir * attackForce, ForceMode2D.Impulse);
     }
 
     public void CheckState()

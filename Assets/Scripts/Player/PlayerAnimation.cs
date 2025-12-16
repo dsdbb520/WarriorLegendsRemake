@@ -51,4 +51,10 @@ public class PlayerAnimation : MonoBehaviour
         animator.SetTrigger("Injurt");
     }
 
+
+    public void Shoot()
+    {
+        animator.SetTrigger("Shooting");
+    }
+
 }

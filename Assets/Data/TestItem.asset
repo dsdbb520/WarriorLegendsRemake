@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3eae51add53128e4581ee5591416d4e1, type: 3}
   m_Name: TestItem
   m_EditorClassIdentifier: 
-  itemName: TestItem
+  itemName: "\u91D1\u9152\u4E4B\u676F"
   itemIcon: {fileID: 1814830617, guid: 2b5216089a500704a8b900c549957376, type: 3}
   itemType: 0
-  description: This is a test item
+  description: "\u6765\u81EA\u5F02\u4E16\u754C\u7684\u85CF\u54C1\uFF0C\u4F7F\u7528\u540E\u56DE\u590D10\u70B9HP"
   stackable: 1
   useValue: 10

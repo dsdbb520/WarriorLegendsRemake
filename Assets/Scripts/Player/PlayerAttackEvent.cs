@@ -8,8 +8,15 @@ public class PlayerAttackEvents : MonoBehaviour
     [Header("Attack脚本列表")]
     public List<Attack> attackScripts = new List<Attack>();
 
+    private Control control;
 
-    /// 动画事件调用，开启指定段的攻击
+
+    private void Awake()
+    {
+        control = GetComponent<Control>();
+    }
+
+    //动画事件调用，开启指定段的攻击
     public void EnableAttack(int index)
     {
         if (index < 0 || index >= attackColliders.Count) return;
@@ -19,12 +26,20 @@ public class PlayerAttackEvents : MonoBehaviour
     }
 
 
-    /// 动画事件调用，关闭指定段的攻击
+    //动画事件调用，关闭指定段的攻击
     public void DisableAttack(int index)
     {
         if (index < 0 || index >= attackColliders.Count) return;
 
         attackColliders[index].enabled = false;
+    }
+
+    public void EndAttack()
+    {
+        if (control != null)
+        {
+            control.isAttack = false;
+        }
     }
 
     public void PlayAttack1Sound() => AudioManager.Instance.PlayCharacterSound("attack1");
