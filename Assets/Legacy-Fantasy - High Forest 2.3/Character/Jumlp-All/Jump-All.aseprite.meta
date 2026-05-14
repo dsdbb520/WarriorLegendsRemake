@@ -8,6 +8,7 @@ ScriptedImporter:
   assetBundleName: 
   assetBundleVariant: 
   script: {fileID: 11500000, guid: 62a9f0aa5b59740cfbadc7e5f9823bb0, type: 3}
+  importerVersion: 2
   textureImporterSettings:
     alphaSource: 1
     mipMapMode: 0
@@ -77,6 +78,7 @@ ScriptedImporter:
     defaultPivotSpace: 0
     defaultPivotAlignment: 7
     customPivotPosition: {x: 0.5, y: 0.5}
+    mosaicPadding: 4
     spritePadding: 0
     generateModelPrefab: 1
     generateAnimationClips: 1
@@ -89,6 +91,7 @@ ScriptedImporter:
     defaultPivotSpace: 0
     defaultPivotAlignment: 7
     customPivotPosition: {x: 0.5, y: 0.5}
+    mosaicPadding: 4
     spritePadding: 0
     generateModelPrefab: 1
     generateAnimationClips: 1
@@ -422,126 +425,146 @@ ScriptedImporter:
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    guid: -1850437900
+    uuid:
+      value0: 1066376132
+      value1: 0
+      value2: 0
+      value3: 0
+    guid: 1066376132
     name: Jump-All
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: Jump-All_Frame_0
+    - name: Frame_0
       frameIndex: 0
+      additiveSortOrder: 0
       cellRect:
         x: 12
         y: 0
         width: 35
         height: 34
       spriteId: 0b545f70f7c50e54287b8c8b434b3ae9
-    - name: Jump-All_Frame_1
+    - name: Frame_1
       frameIndex: 1
+      additiveSortOrder: 0
       cellRect:
         x: 11
         y: 0
         width: 35
         height: 40
       spriteId: 3a991474979600f489246ae38e69d8f0
-    - name: Jump-All_Frame_2
+    - name: Frame_2
       frameIndex: 2
+      additiveSortOrder: 0
       cellRect:
         x: 12
         y: 1
         width: 23
         height: 57
       spriteId: 362b27e367d944646b74000ed2f1a359
-    - name: Jump-All_Frame_3
+    - name: Frame_3
       frameIndex: 3
+      additiveSortOrder: 0
       cellRect:
         x: 5
         y: 2
         width: 33
         height: 59
       spriteId: 744d75fba878a7244922a117c0cc9b37
-    - name: Jump-All_Frame_4
+    - name: Frame_4
       frameIndex: 4
+      additiveSortOrder: 0
       cellRect:
         x: 5
         y: 4
         width: 33
         height: 57
       spriteId: 550d421a28c64ad4fbbea65ae707db18
-    - name: Jump-All_Frame_5
+    - name: Frame_5
       frameIndex: 5
+      additiveSortOrder: 0
       cellRect:
         x: 7
         y: 5
         width: 31
         height: 55
       spriteId: 19916aa8b5633d145b5ffcb1b8ef54d0
-    - name: Jump-All_Frame_6
+    - name: Frame_6
       frameIndex: 6
+      additiveSortOrder: 0
       cellRect:
         x: 8
         y: 2
         width: 30
         height: 57
       spriteId: 45cc8686e2ebbc846a88cf5920b4e403
-    - name: Jump-All_Frame_7
+    - name: Frame_7
       frameIndex: 7
+      additiveSortOrder: 0
       cellRect:
         x: 9
         y: 2
         width: 29
         height: 55
       spriteId: d8b53fb5af7efd44a9c321e6b282f99d
-    - name: Jump-All_Frame_8
+    - name: Frame_8
       frameIndex: 8
+      additiveSortOrder: 0
       cellRect:
         x: 8
         y: 5
         width: 29
         height: 52
       spriteId: 2b2818abd01462f498f870f17ee76ee7
-    - name: Jump-All_Frame_9
+    - name: Frame_9
       frameIndex: 9
+      additiveSortOrder: 0
       cellRect:
         x: 9
         y: 6
         width: 27
         height: 51
       spriteId: 58d94e005931dbe4bba7e8bb25bb3f51
-    - name: Jump-All_Frame_10
+    - name: Frame_10
       frameIndex: 10
+      additiveSortOrder: 0
       cellRect:
         x: 12
         y: 5
         width: 25
         height: 53
       spriteId: 763571d1d7b7c3542a26004d4dc49498
-    - name: Jump-All_Frame_11
+    - name: Frame_11
       frameIndex: 11
+      additiveSortOrder: 0
       cellRect:
         x: 11
         y: 4
         width: 26
         height: 52
       spriteId: d20972624e2351644bc2a04d25cc9bc9
-    - name: Jump-All_Frame_12
+    - name: Frame_12
       frameIndex: 12
+      additiveSortOrder: 0
       cellRect:
         x: 13
         y: 1
         width: 25
         height: 48
       spriteId: 7752a75f65248134f83b1039d9da63e1
-    - name: Jump-All_Frame_13
+    - name: Frame_13
       frameIndex: 13
+      additiveSortOrder: 0
       cellRect:
         x: 12
         y: 0
         width: 35
         height: 41
       spriteId: cf5d803cb42c1b147b889eba4de8d346
-    - name: Jump-All_Frame_14
+    - name: Frame_14
       frameIndex: 14
+      additiveSortOrder: 0
       cellRect:
         x: 12
         y: 0
@@ -563,6 +586,8 @@ ScriptedImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     androidETC2FallbackOverride: 0
+  generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
   canvasSize: {x: 64, y: 64}
+  previousTextureSize: {x: 256, y: 256}

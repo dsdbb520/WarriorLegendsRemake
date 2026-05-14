@@ -8,6 +8,7 @@ ScriptedImporter:
   assetBundleName: 
   assetBundleVariant: 
   script: {fileID: 11500000, guid: 62a9f0aa5b59740cfbadc7e5f9823bb0, type: 3}
+  importerVersion: 2
   textureImporterSettings:
     alphaSource: 1
     mipMapMode: 0
@@ -77,6 +78,7 @@ ScriptedImporter:
     defaultPivotSpace: 0
     defaultPivotAlignment: 7
     customPivotPosition: {x: 0.5, y: 0.5}
+    mosaicPadding: 4
     spritePadding: 0
     generateModelPrefab: 1
     generateAnimationClips: 1
@@ -89,6 +91,7 @@ ScriptedImporter:
     defaultPivotSpace: 0
     defaultPivotAlignment: 7
     customPivotPosition: {x: 0.5, y: 0.5}
+    mosaicPadding: 4
     spritePadding: 0
     generateModelPrefab: 1
     generateAnimationClips: 1
@@ -282,70 +285,83 @@ ScriptedImporter:
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    guid: -357079590
+    uuid:
+      value0: 842948034
+      value1: 0
+      value2: 0
+      value3: 0
+    guid: 842948034
     name: Jump
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: Jump_Frame_0
+    - name: Frame_0
       frameIndex: 0
+      additiveSortOrder: 0
       cellRect:
         x: 5
         y: 3
         width: 33
         height: 58
       spriteId: 4722bc0d5706e1b4ea66ae8523c9bca1
-    - name: Jump_Frame_1
+    - name: Frame_1
       frameIndex: 1
+      additiveSortOrder: 0
       cellRect:
         x: 7
         y: 5
         width: 31
         height: 55
       spriteId: cc60f13999b187e4584b757df3ad0ea2
-    - name: Jump_Frame_2
+    - name: Frame_2
       frameIndex: 2
+      additiveSortOrder: 0
       cellRect:
         x: 8
         y: 2
         width: 30
         height: 57
       spriteId: b4e6b7434c270b7498d99e82f76881a3
-    - name: Jump_Frame_3
+    - name: Frame_3
       frameIndex: 3
+      additiveSortOrder: 0
       cellRect:
         x: 9
         y: 2
         width: 29
         height: 55
       spriteId: 245ea894a37591f40896a3102c24d283
-    - name: Jump_Frame_4
+    - name: Frame_4
       frameIndex: 4
+      additiveSortOrder: 0
       cellRect:
         x: 8
         y: 5
         width: 29
         height: 52
       spriteId: 6ba600c101953574c900032c524b03e8
-    - name: Jump_Frame_5
+    - name: Frame_5
       frameIndex: 5
+      additiveSortOrder: 0
       cellRect:
         x: 9
         y: 6
         width: 27
         height: 51
       spriteId: 8094d18dcdcfac44e8a188ec53633543
-    - name: Jump_Frame_6
+    - name: Frame_6
       frameIndex: 6
+      additiveSortOrder: 0
       cellRect:
         x: 12
         y: 5
         width: 25
         height: 53
       spriteId: 89f7718a924a654429233f80341adfa9
-    - name: Jump_Frame_7
+    - name: Frame_7
       frameIndex: 7
+      additiveSortOrder: 0
       cellRect:
         x: 11
         y: 5
@@ -367,6 +383,8 @@ ScriptedImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     androidETC2FallbackOverride: 0
+  generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
   canvasSize: {x: 48, y: 64}
+  previousTextureSize: {x: 128, y: 256}

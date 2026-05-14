@@ -5,31 +5,31 @@ using System.Collections.Generic;
 [RequireComponent(typeof(Collider2D))]
 public class TaskNPC : MonoBehaviour, IInteractable
 {
-    [Header("NPC »ù±¾ĞÅÏ¢")]
+    [Header("NPC åŸºæœ¬ä¿¡æ¯")]
     public string npcName;
 
-    [Header("ÈÎÎñÏà¹Ø")]
-    public string taskID;               //Ö¸¶¨Õâ´ÎÈÎÎñID
+    [Header("ä»»åŠ¡è®¾ç½®")]
+    public string taskID;
     public GameObject taskPopupPrefab;
     private bool hasGivenTask = false;
 
-    [Header("³¡¾°Áª¶¯")]
+    [Header("è”åŠ¨è®¾ç½®")]
     public BlockWall linkedWall;
 
-    [Header("½»»¥ÌáÊ¾")]
+    [Header("äº¤äº’æç¤º")]
     public GameObject indicatorPrefab;
-    [Tooltip("ÌáÊ¾ÔÚNPCÍ·¶¥µÄÆ«ÒÆ")]
+    [Tooltip("æ˜¾ç¤ºåœ¨NPCå¤´é¡¶çš„åç§»")]
     public Vector3 indicatorOffset = new Vector3(0, 1.5f, 0);
-    [Tooltip("ÌáÊ¾µÄËõ·Å")]
     public Vector3 indicatorScale = Vector3.one;
 
     private GameObject indicatorInstance;
-    private List<string> activeTipIDs; //¼ÇÂ¼µ±Ç°ÏÔÊ¾µÄTip
+    private List<string> activeTipIDs;
     private bool isTalking = false;
+
+    private const string LockOwner = "tasknpc";
 
     private void Start()
     {
-        // Éú³ÉÌáÊ¾·û£¨¿ÉÒ»Ö±ÏÔÊ¾£©
         if (indicatorPrefab != null)
         {
             indicatorInstance = Instantiate(indicatorPrefab, transform);
@@ -41,29 +41,25 @@ public class TaskNPC : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        Debug.Log($"Trying to interact with {npcName}. isTalking={isTalking}, hasGivenTask={hasGivenTask}");
         if (isTalking || hasGivenTask) return;
 
         isTalking = true;
 
-        //¹Ø±ÕËùÓĞTip£¬²¢¼ÇÂ¼µ±Ç°ÏÔÊ¾×´Ì¬
         if (ActionTipUI.Instance != null)
             activeTipIDs = ActionTipUI.Instance.HideAllTipsAndReturnActive();
 
+        // Single lock â€” was incorrectly called twice before (here AND inside the coroutine)
+        PlayerActionManager.Instance.LockActions(LockOwner);
 
-        PlayerActionManager.Instance.DisableAll();
-
-        //»ñÈ¡¶Ô»°Êı¾İ
         DialogueEntryCSV data = DialogueLoader.Instance.GetDialogueCSV(npcName, taskID);
         if (data == null)
         {
-            Debug.LogError($"NPC ¶Ô»°Î´ÕÒµ½: {npcName} taskID: {taskID}");
-            PlayerActionManager.Instance.EnableAll();
+            Debug.LogError($"NPC dialogue not found: npcName={npcName} taskID={taskID}");
+            Unlock();
             isTalking = false;
             return;
         }
 
-        //²¥·Å³õÊ¼¶Ô»°
         if (data.dialogueLines != null && data.dialogueLines.Length > 0)
             DialogueManager.Instance.StartDialogue(npcName, data.dialogueLines);
 
@@ -72,23 +68,12 @@ public class TaskNPC : MonoBehaviour, IInteractable
 
     private IEnumerator WaitForDialogueThenShowTask(DialogueEntryCSV data)
     {
-        if (ActionTipUI.Instance != null)
-            activeTipIDs = ActionTipUI.Instance.HideAllTipsAndReturnActive();
+        // No second DisableAll/LockActions here â€” the lock is already held from Interact()
+        yield return new WaitUntil(() => !DialogueManager.Instance.dialoguePanel.activeSelf);
 
-        PlayerActionManager.Instance.DisableAll();
-
-        //µÈ´ı¶Ô»°½áÊø
-        yield return new WaitUntil(() => DialogueManager.Instance.dialoguePanel.activeSelf == false);
-
-        //µ¯³öÈÎÎñ´°¿Ú
         ShowTaskPopup(data);
         isTalking = false;
-
-        //¶Ô»°½áÊøºó»Ö¸´Ô­±¾ÏÔÊ¾µÄÌáÊ¾
-        if (ActionTipUI.Instance != null && activeTipIDs != null)
-            ActionTipUI.Instance.RestoreTips(activeTipIDs);
     }
-
 
     private void ShowTaskPopup(DialogueEntryCSV data)
     {
@@ -96,39 +81,30 @@ public class TaskNPC : MonoBehaviour, IInteractable
 
         var popupGO = Instantiate(taskPopupPrefab);
 
-        //»ñÈ¡½Å±¾×é¼ş
-        var popup = popupGO.GetComponent<TaskPopup>();
-
-        Canvas popupCanvas = popupGO.GetComponent<Canvas>();
+        var popupCanvas = popupGO.GetComponent<Canvas>();
         if (popupCanvas != null)
         {
             popupCanvas.overrideSorting = true;
             popupCanvas.sortingOrder = 999;
         }
 
-        //ÉèÖÃÈÎÎñÄÚÈİºÍ°´Å¥»Øµ÷
-        popup.Setup(
-            string.IsNullOrEmpty(data.taskTitle) ? "ÈÎÎñ" : data.taskTitle,
+        popupGO.GetComponent<TaskPopup>().Setup(
+            string.IsNullOrEmpty(data.taskTitle) ? "ä»»åŠ¡" : data.taskTitle,
             string.IsNullOrEmpty(data.taskDescription) ? "" : data.taskDescription,
             () => OnAccept(data),
             OnReject
         );
 
-        popup.Show();
+        popupGO.GetComponent<TaskPopup>().Show();
     }
-
 
     private void OnAccept(DialogueEntryCSV data)
     {
         hasGivenTask = true;
-        TaskManager.Instance.AddTask(data);   //½«ÈÎÎñÌí¼ÓÖÁÒÑ½ÓÊÜµÄÈÎÎñÁĞ±í
-        if (indicatorInstance != null)
-            indicatorInstance.SetActive(false);
-        if (linkedWall != null)
-        {
-            linkedWall.Unlock();
-        }
-        //²¥·ÅÈÎÎñ½ÓÊÜºóµÄ¶Ô»°
+        TaskManager.Instance.AddTask(data);
+        if (indicatorInstance != null) indicatorInstance.SetActive(false);
+        if (linkedWall != null) linkedWall.Unlock();
+
         if (data.afterAcceptDialogue != null && data.afterAcceptDialogue.Length > 0)
         {
             DialogueManager.Instance.StartDialogue(data.npcName, data.afterAcceptDialogue);
@@ -136,26 +112,24 @@ public class TaskNPC : MonoBehaviour, IInteractable
         }
         else
         {
-            PlayerActionManager.Instance.EnableAll();
-            //»Ö¸´Tip
-            if (ActionTipUI.Instance != null && activeTipIDs != null)
-                ActionTipUI.Instance.RestoreTips(activeTipIDs);
+            Unlock();
         }
     }
 
     private void OnReject()
     {
-        PlayerActionManager.Instance.EnableAll();
-        // »Ö¸´ Tip
-        if (ActionTipUI.Instance != null && activeTipIDs != null)
-            ActionTipUI.Instance.RestoreTips(activeTipIDs);
+        Unlock();
     }
 
     private IEnumerator WaitForDialogueEndThenUnlock()
     {
-        yield return new WaitUntil(() => DialogueManager.Instance.dialoguePanel.activeSelf == false);
-        PlayerActionManager.Instance.EnableAll();
-        // »Ö¸´ Tip
+        yield return new WaitUntil(() => !DialogueManager.Instance.dialoguePanel.activeSelf);
+        Unlock();
+    }
+
+    private void Unlock()
+    {
+        PlayerActionManager.Instance.UnlockActions(LockOwner);
         if (ActionTipUI.Instance != null && activeTipIDs != null)
             ActionTipUI.Instance.RestoreTips(activeTipIDs);
     }

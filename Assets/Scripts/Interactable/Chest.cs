@@ -25,7 +25,12 @@ public class Chest : MonoBehaviour, IInteractable
         if (!string.IsNullOrEmpty(objectID) && PlayerManager.Instance.IsObjectTriggered(objectID))
         {
             isOpened = true;
-            spriteRenderer.sprite = openSprite; //直接显示开箱图
+            spriteRenderer.sprite = openSprite;
+            var indicator = GetComponent<InteractionIndicator>();
+            if (indicator != null)
+            {
+                indicator.OnInteracted();
+            }
         }
         else
         {

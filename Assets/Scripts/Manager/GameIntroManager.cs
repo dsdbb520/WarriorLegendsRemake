@@ -20,7 +20,22 @@ public class GameIntroManager : MonoBehaviour
         director.Play();
     }
 
+    private void Start()
+    {
+        if (SaveSystemJSON.IsLoadingFromSave)
+        {
+            if (vcamCloseup != null) vcamCloseup.Priority = 0; //确保优先级最低
+            if (blackBars != null) blackBars.SetActive(false);
+            if (director != null) director.Stop();
 
+            if (PlayerActionManager.Instance != null) PlayerActionManager.Instance.EnableAll();
+            if (playerStstusBar != null) playerStstusBar.SetActive(true);
+
+            Destroy(gameObject); // 销毁自己，任务完成
+            return;
+        }
+        StartGameSequence();
+    }
 
     public void TriggerDialogue()
     {

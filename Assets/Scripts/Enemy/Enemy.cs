@@ -1,26 +1,25 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
     protected Rigidbody2D rb;
-    [HideInInspector]public Animator animator;
+    [HideInInspector] public Animator animator;
     [HideInInspector] public PhysicsCheck physicsCheck;
     public Character character;
 
-    [Header("»ù±¾²ÎÊı")]
+    [Header("ç§»åŠ¨è®¾ç½®")]
     public float normalSpeed;
     public float chaseSpeed;
     [HideInInspector] public float currectSpeed;
     public float hurtForce;
     public Vector3 faceDir;
 
-    [Header("×´Ì¬")]
+    [Header("çŠ¶æ€")]
     public bool isHurt;
     public bool isDead;
 
-    [Header("¼ÆÊ±Æ÷")]
+    [Header("è®¡æ—¶å™¨")]
     public float waitTime;
     public float waitTimeCounter;
     public float lostTime;
@@ -28,14 +27,14 @@ public class Enemy : MonoBehaviour
     public bool wait;
     private bool hasTurned = false;
 
-    [Header("¼ì²â")]
+    [Header("æ£€æµ‹")]
     public Vector2 centerOffset;
     public Vector2 checkSize;
     public float checkDistance;
     public LayerMask attackLayer;
     public LayerMask wallLayer;
 
-    [Header("ÈÎÎñÊ¶±ğ")]
+    [Header("æ•Œäººæ ‡è¯†")]
     public string enemyID;
 
     protected BaseState chaseState;
@@ -45,8 +44,6 @@ public class Enemy : MonoBehaviour
     private MaterialPropertyBlock propBlock;
     private int dissolveID;
     private SpriteRenderer spriteRenderer;
-
-
 
     private void OnEnable()
     {
@@ -58,6 +55,7 @@ public class Enemy : MonoBehaviour
     {
         wait = false;
         waitTimeCounter = waitTime;
+        lostTimeCounter = lostTime;  // BUG FIX: was never initialized, causing instant chase-exit on first detection
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         physicsCheck = GetComponent<PhysicsCheck>();
@@ -79,14 +77,8 @@ public class Enemy : MonoBehaviour
     {
         if (!isHurt && !isDead)
         {
-            if (!wait)
-            {
-                Move();
-            }
-            else
-            {
-                rb.velocity = new Vector2(0, rb.velocity.y); // Í£Ö¹Ë®Æ½ÒÆ¶¯
-            }
+            if (!wait) Move();
+            else rb.velocity = new Vector2(0, rb.velocity.y);
         }
         currentState.PhysicsUpdate();
     }
@@ -108,89 +100,75 @@ public class Enemy : MonoBehaviour
 
     public void TimeCounter()
     {
-        // ¼ÆÊ±Æ÷µİ¼õ
         waitTimeCounter -= Time.deltaTime;
+
         if (!FoundPlayer() && lostTimeCounter >= 0)
-        {
             lostTimeCounter -= Time.deltaTime;
-        }
 
-
-        //×²Ç½»ØÍ·
+        // Turn on wall/edge
         if ((physicsCheck.touchedLeftWall || physicsCheck.touchedRightWall || !physicsCheck.isGround) && !hasTurned)
         {
-            Turn();                                 // ×ªÉí
-            waitTime = Random.Range(2f, 4f);       // ÏÂÒ»´ÎËæ»úÒÆ¶¯Ê±¼ä
+            Turn();
+            waitTime = Random.Range(2f, 4f);
             waitTimeCounter = waitTime;
-            hasTurned = true;                       // ±ê¼ÇÒÑ¾­×ª¹ı
+            hasTurned = true;
             wait = false;
         }
 
-        //Ëæ»úÊ±¼äµ½Ò²»ØÍ·
         if (waitTimeCounter <= 0)
         {
-            if (currentState == chaseState) return;      //Èç¹ûµ±Ç°ÊÇ×·»÷×´Ì¬£¬Ö±½ÓÌø¹ı¼ÆÊ±
+            if (currentState == chaseState) return;
             if (wait)
             {
-                Turn();                              //×ªÉí
-                waitTime = Random.Range(2f, 4f);   //Í£ÏÂºóµÄËæ»úµÈ´ıÊ±¼ä
+                Turn();
+                waitTime = Random.Range(2f, 4f);
             }
             else
-                waitTime = Random.Range(1f, 2f);   //ÒÆ¶¯ºóµÄËæ»úÊ±¼ä
-            waitTimeCounter = waitTime;            //ÖØÖÃ¼ÆÊ±Æ÷
-            wait = !wait;                           //ÇĞ»»µÈ´ı/ÒÆ¶¯×´Ì¬
-            hasTurned = false;                      //ÖØÖÃÅöÇ½±êÖ¾£¬ÔÊĞíÏÂÒ»´Î´¥·¢
+                waitTime = Random.Range(1f, 2f);
+            waitTimeCounter = waitTime;
+            wait = !wait;
+            hasTurned = false;
         }
     }
 
     public bool FoundPlayer()
     {
-        //·¢ÉäBox¼ì²âÊÇ·ñÅöµ½Íæ¼Ò
-        RaycastHit2D playerHit = Physics2D.BoxCast(transform.position + (Vector3)centerOffset,
-                                           checkSize, 0, faceDir, checkDistance, attackLayer);
-        if (playerHit)
-        {
-            // ÔÙ´ÓµĞÈËÎ»ÖÃ·¢ÉäÒ»ÌõÖ±Ïßµ½Íæ¼Ò£¬¿´ÖĞ¼äÓĞÃ»ÓĞÇ½
-            RaycastHit2D wallHit = Physics2D.Raycast(transform.position + (Vector3)centerOffset,
-                                                     faceDir,
-                                                     Vector2.Distance(transform.position, playerHit.transform.position),
-                                                     wallLayer);
+        RaycastHit2D playerHit = Physics2D.BoxCast(
+            transform.position + (Vector3)centerOffset,
+            checkSize, 0, faceDir, checkDistance, attackLayer);
 
-            if (!wallHit)
-            {
-                Debug.Log("Íæ¼ÒÔÚÊÓÒ°ÖĞÇÒÃ»ÓĞ±»Ç½µ²×¡");
-                return true;
-            }
-            else
-            {
-                Debug.Log("Íæ¼Ò±»Ç½µ²×¡");
-                return false;
-            }
-        }
-        return false;
+        if (!playerHit) return false;
+
+        // Check line-of-sight: no wall between enemy and player
+        RaycastHit2D wallHit = Physics2D.Raycast(
+            transform.position + (Vector3)centerOffset,
+            faceDir,
+            Vector2.Distance(transform.position, playerHit.transform.position),
+            wallLayer);
+
+        return !wallHit;
     }
 
-    public void SwitchState(NPCState state)    //ÇĞ»»×´Ì¬º¯Êı£¬ÔÚ×´Ì¬»úÖĞµ÷ÓÃ½øĞĞ×´Ì¬ÇĞ»»
+    public void SwitchState(NPCState state)
     {
         var newState = state switch
         {
             NPCState.Patrol => patrolState,
-            NPCState.Chase => chaseState,
-            _ => null
+            NPCState.Chase  => chaseState,
+            _               => null
         };
         currentState.OnExit();
         currentState = newState;
         currentState.OnEnter(this);
     }
 
+    #region äº‹ä»¶æ‰§è¡Œæ–¹æ³•
 
-
-    #region ÊÂ¼şÖ´ĞĞ·½·¨
     public void GetInjured(Transform attacker)
     {
         animator.SetTrigger("Hurt");
         isHurt = true;
-        rb.velocity = Vector2.zero;    //ÊÜ»÷Ê±ÏÈ°ÑËÙ¶È½µÎªÁã
+        rb.velocity = Vector2.zero;
         Vector2 dir = new Vector2(transform.position.x - attacker.position.x, 0).normalized;
         rb.AddForce(dir * hurtForce, ForceMode2D.Impulse);
     }
@@ -202,10 +180,7 @@ public class Enemy : MonoBehaviour
         gameObject.layer = 2;
         isDead = true;
         animator.SetBool("isDead", true);
-        if (TaskManager.Instance != null)
-        {
-            TaskManager.Instance.UpdateTaskProgress(enemyID, 1);
-        }
+        TaskManager.Instance?.UpdateTaskProgress(enemyID, 1);
         StartCoroutine(DissolveAndDestroy());
     }
 
@@ -214,33 +189,28 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         float counter = 0f;
-        float duration = 1f; //ÈÜ½â³ÖĞø1Ãë
+        const float duration = 1f;
 
         while (counter < duration)
         {
             counter += Time.deltaTime;
-            float val = Mathf.Lerp(0f, 1.1f, counter / duration); //È·±£ÍêÈ«ÏûÉ¢
-
-            //ÉèÖÃShaderÊôĞÔ
+            float val = Mathf.Lerp(0f, 1.1f, counter / duration);
             spriteRenderer.GetPropertyBlock(propBlock);
             propBlock.SetFloat(dissolveID, val);
             spriteRenderer.SetPropertyBlock(propBlock);
-
             yield return null;
         }
 
-        //Ïú»ÙÎïÌå
         Destroy(gameObject);
     }
-
 
     #endregion
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(transform.position + (Vector3)centerOffset, checkSize);   //ºìÉ«·½¿ò±íÊ¾¼ì²âÆğÊ¼µã
+        Gizmos.DrawWireCube(transform.position + (Vector3)centerOffset, checkSize);
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(transform.position + (Vector3)centerOffset + new Vector3(-checkDistance, 0, 0), checkSize);  //À¶É«·½¿ò±íÊ¾¼ì²âÍæ¼Ò·¶Î§
+        Gizmos.DrawWireCube(transform.position + (Vector3)centerOffset + new Vector3(-checkDistance, 0, 0), checkSize);
     }
 }

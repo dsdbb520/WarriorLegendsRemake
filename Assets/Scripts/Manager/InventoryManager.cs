@@ -1,75 +1,46 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class InventoryManager : MonoBehaviour
+public class InventoryManager : SingletonMono<InventoryManager>
 {
-    public static InventoryManager Instance;
-
-    // ¸ÄÓÃĞÂµÄ InventoryItem Àà
     public List<InventoryItem> items = new List<InventoryItem>();
-    public ItemDataSO TestItem;
-    private void Awake()
-    {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-    }
 
-    private void Start()
-    {
-        InventoryManager.Instance.AddItem(TestItem, 5);
-    }
-
-    // Ìí¼ÓÎïÆ·
     public void AddItem(ItemDataSO data, int amount)
     {
-        // ¼ì²éÊÇ·ñ¿É¶ÑµşÇÒÒÑ´æÔÚ
+        if (data == null) return;
+
         if (data.stackable)
         {
-            InventoryItem existingItem = items.Find(x => x.itemData == data);
-            if (existingItem != null)
-            {
-                existingItem.amount += amount;
-                return;
-            }
+            var existing = items.Find(x => x.itemData == data);
+            if (existing != null) { existing.amount += amount; return; }
         }
 
-        // ĞÂÔöÎïÆ·
-        InventoryItem newItem = new InventoryItem { itemData = data, amount = amount };
-        items.Add(newItem);
+        items.Add(new InventoryItem { itemData = data, amount = amount });
     }
 
-    // Ê¹ÓÃÎïÆ·µÄºËĞÄÂß¼­
     public void UseItem(InventoryItem item)
     {
         if (item.amount <= 0) return;
 
-        // »ñÈ¡Íæ¼ÒÒıÓÃ
-        Character player = PlayerManager.Instance.GetComponent<Character>();
+        var player = PlayerManager.Instance?.GetComponent<Character>();
+        if (player == null) return;
 
-        // ¸ù¾İÀàĞÍÖ´ĞĞĞ§¹û
         switch (item.itemData.itemType)
         {
             case ItemType.Useable:
-                //¼ÙÉèuseValueÊÇ»ØÑªÁ¿
                 player.Heal(item.itemData.useValue);
-                NotificationManager.Instance.Show("»Ø¸´ÁË " + item.itemData.useValue + "µãHP£¡");
-                item.amount--; // ÏûºÄÒ»¸ö
+                NotificationManager.Instance?.Show($"æ¢å¤äº† {item.itemData.useValue} ç‚¹HP");
+                item.amount--;
                 break;
 
             case ItemType.Equipment:
-                //TODO: ×°±¸Âß¼­£¨ºóĞøÊµÏÖ£©
-                Debug.Log($"×°±¸ÁË {item.itemData.itemName}");
+                Debug.Log($"è£…å¤‡äº† {item.itemData.itemName}");
                 break;
         }
 
-        //Èç¹ûÊıÁ¿Îª0£¬´Ó±³°üÒÆ³ı
         if (item.amount <= 0)
-        {
             items.Remove(item);
-        }
 
-        //Í¨Öª UI Ë¢ĞÂ£¨Èç¹û BackpackPanel ÊÇ¿ª×ÅµÄ£©
-        //¸üºÃµÄ×ö·¨ÊÇÓÃÊÂ¼ş£¬ÕâÀï¼òµ¥Ö±½Óµ÷ÓÃ
         FindObjectOfType<BackpackPanel>()?.UpdateItems();
     }
 }

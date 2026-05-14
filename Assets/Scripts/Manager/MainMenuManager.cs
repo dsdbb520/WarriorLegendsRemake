@@ -76,7 +76,7 @@ public class MainMenuManager : MonoBehaviour
     {
         SceneManager.sceneLoaded -= OnSceneLoadedContinueGame;
 
-        // 尝试找到已有的 Player
+        //尝试找到已有的 Player
         Character player = GameObject.FindWithTag("Player")?.GetComponent<Character>();
 
         if (player == null)
@@ -109,7 +109,7 @@ public class MainMenuManager : MonoBehaviour
         player.playStatBar.healthSlowImage.fillAmount = healthPercent;
 
         // 通知摄像机绑定Player
-        CameraAutoFollow cam = FindObjectOfType<CameraAutoFollow>();
+        CameraAutoFollow cam = GameObject.Find("VCam_MainCam").GetComponent<CameraAutoFollow>();
         if (cam != null)
             cam.BindToPlayer(player.gameObject);
 

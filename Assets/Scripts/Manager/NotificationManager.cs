@@ -1,32 +1,21 @@
 using UnityEngine;
 
-public class NotificationManager : MonoBehaviour
+public class NotificationManager : SingletonMono<NotificationManager>
 {
-    public static NotificationManager Instance;
-
-    [Header("ÉèÖÃ")]
+    [Header("é…ç½®")]
     public GameObject notificationPrefab;
     public Transform notificationContainer;
 
-    [Tooltip("×î´óÍ¬Ê±ÏÔÊ¾ÊıÁ¿£¬·ÀÖ¹Ë¢ÆÁÌ«¸ßµ²×¡ÊÓÏß")]
+    [Tooltip("æœ€å¤šåŒæ—¶æ˜¾ç¤ºçš„é€šçŸ¥æ•°é‡ï¼Œé˜²æ­¢åˆ·å±")]
     public int maxMessageCount = 5;
-
-    private void Awake()
-    {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-    }
 
     public void Show(string content)
     {
-        GameObject newTip = Instantiate(notificationPrefab, notificationContainer);
-
+        var newTip = Instantiate(notificationPrefab, notificationContainer);
         newTip.GetComponent<NotificationUI>().Setup(content);
 
-        //ÏŞÖÆÊıÁ¿£¨Èç¹û³¬¹ıÉÏÏŞ£¬Ïú»Ù×îÉÏÃæµÄÄÇ¸ö£©
+        // Remove oldest notification if over limit
         if (notificationContainer.childCount > maxMessageCount)
-        {
             Destroy(notificationContainer.GetChild(0).gameObject);
-        }
     }
 }

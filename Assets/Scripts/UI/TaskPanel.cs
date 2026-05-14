@@ -12,16 +12,9 @@ public class TaskPanel : MonoBehaviour
     public Button nextPageButton;
     public TaskDetailPopup detailPopup;
 
-    private bool previousCanMove;
-    private bool previousCanJump;
-    private bool previousCanAttack;
-    private bool previousCanInteract;
-    private bool previousCanBackpack;
-    private bool previousCanDodge;
     private List<string> activeTipIDs;
-
     private int currentPage = 1;
-    private int tasksPerPage = 5;
+    private const int TasksPerPage = 5;
     private List<DialogueEntryCSV> activeTasks;
 
     private void Awake()
@@ -34,17 +27,14 @@ public class TaskPanel : MonoBehaviour
         if (TaskManager.Instance != null)
         {
             activeTasks = TaskManager.Instance.activeTasks;
-            RefreshPanel(); //Ã¿´Î´ò¿ª¶¼Ë¢ĞÂÒ»ÏÂ
+            RefreshPanel();
         }
     }
 
     public void RefreshPanel()
     {
-        //Çå¿Õ¾ÉÌõÄ¿
         foreach (Transform child in taskListParent)
-        {
             Destroy(child.gameObject);
-        }
 
         if (activeTasks == null || activeTasks.Count == 0)
         {
@@ -52,46 +42,25 @@ public class TaskPanel : MonoBehaviour
             return;
         }
 
-        //¼ÆËã·ÖÒ³
-        int totalPages = Mathf.CeilToInt((float)activeTasks.Count / tasksPerPage);
-        if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
+        int totalPages = Mathf.CeilToInt((float)activeTasks.Count / TasksPerPage);
+        if (currentPage > totalPages) currentPage = totalPages;
 
-        int startIndex = (currentPage - 1) * tasksPerPage;
-        int endIndex = Mathf.Min(startIndex + tasksPerPage, activeTasks.Count);
+        int startIndex = (currentPage - 1) * TasksPerPage;
+        int endIndex = Mathf.Min(startIndex + TasksPerPage, activeTasks.Count);
 
-        //Éú³Éµ±Ç°Ò³µÄÈÎÎñÌõÄ¿
         for (int i = startIndex; i < endIndex; i++)
         {
             var task = activeTasks[i];
             var entry = Instantiate(taskEntryPrefab, taskListParent);
 
-            //»ñÈ¡Title
-            var titleText = entry.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+            var titleText = entry.transform.Find("Title")?.GetComponent<TextMeshProUGUI>();
             if (titleText != null)
-            {
-                titleText.text = string.IsNullOrEmpty(task.taskTitle) ? "Î´ÃüÃûÈÎÎñ" : task.taskTitle;
-            }
+                titleText.text = string.IsNullOrEmpty(task.taskTitle) ? "æœªå‘½åä»»åŠ¡" : task.taskTitle;
 
-            //»ñÈ¡Button×é¼ş
-            Button button = entry.GetComponent<Button>();
-            if (button == null) button = entry.AddComponent<Button>(); // Èç¹ûPrefabÍü¼ÓButton£¬×Ô¶¯¼ÓÒ»¸ö
-
-            button.onClick.AddListener(() =>
-            {
-                Debug.Log($"µã»÷ÁËÈÎÎñ°´Å¥£º{task.taskTitle}"); // ¡¾µ÷ÊÔµã 1¡¿
-
-                if (detailPopup != null)
-                {
-                    detailPopup.Show(task);
-                }
-                else
-                {
-                    Debug.LogError("±¨´íÔ­Òò£ºTaskPanel ÉÏµÄ DetailPopup ±äÁ¿Ã»¸³Öµ£¡¿ìÈ¥ÍÏ×§£¡"); // ¡¾µ÷ÊÔµã 2¡¿
-                }
-            });
+            Button button = entry.GetComponent<Button>() ?? entry.AddComponent<Button>();
+            button.onClick.AddListener(() => detailPopup?.Show(task));
         }
 
-        //¸üĞÂÒ³ÂëUI
         pageText.text = $"Page {currentPage} / {totalPages}";
         prevPageButton.interactable = currentPage > 1;
         nextPageButton.interactable = currentPage < totalPages;
@@ -99,20 +68,13 @@ public class TaskPanel : MonoBehaviour
 
     public void OnPrevPage()
     {
-        if (currentPage > 1)
-        {
-            currentPage--;
-            RefreshPanel();
-        }
+        if (currentPage > 1) { currentPage--; RefreshPanel(); }
     }
 
     public void OnNextPage()
     {
-        if (currentPage < Mathf.CeilToInt((float)activeTasks.Count / tasksPerPage))
-        {
-            currentPage++;
-            RefreshPanel();
-        }
+        int totalPages = Mathf.CeilToInt((float)activeTasks.Count / TasksPerPage);
+        if (currentPage < totalPages) { currentPage++; RefreshPanel(); }
     }
 
     public void TogglePanel()
@@ -124,37 +86,18 @@ public class TaskPanel : MonoBehaviour
 
         if (!isActive)
         {
-            // ´ò¿ªÃæ°åÊ±£¬ÏÈ¹ØµôÏêÇéµ¯´°£¨·ÀÖ¹²ĞÁô£©
             if (detailPopup != null) detailPopup.Hide();
             RefreshPanel();
-
-            if (ActionTipUI.Instance != null)   // Òş²Ø Tip
+            if (ActionTipUI.Instance != null)
                 activeTipIDs = ActionTipUI.Instance.HideAllTipsAndReturnActive();
-            //±£´æÖ®Ç°×´Ì¬
-            previousCanMove = PlayerActionManager.Instance.canMove;
-            previousCanJump = PlayerActionManager.Instance.canJump;
-            previousCanAttack = PlayerActionManager.Instance.canAttack;
-            previousCanInteract = PlayerActionManager.Instance.canInteract;
-            previousCanBackpack = PlayerActionManager.Instance.canBackpack;
-            previousCanDodge = PlayerActionManager.Instance.canDodge;
 
-            //´ò¿ªÃæ°åÊ±½ûÓÃ³ıcanTaskÍâµÄ²Ù×÷
-            PlayerActionManager.Instance.EnableOnlyAction("task");
+            // Lock everything except the task action
+            PlayerActionManager.Instance.LockActions("task", "task");
         }
         else
         {
-            //¹Ø±ÕÃæ°åÊ±£¬Ç¿ÖÆ¹Ø±Õµ¯´°
             if (detailPopup != null) detailPopup.Hide();
-
-            //»Ö¸´Ö®Ç°µÄ²Ù×÷×´Ì¬
-            PlayerActionManager.Instance.canMove = previousCanMove;
-            PlayerActionManager.Instance.canJump = previousCanJump;
-            PlayerActionManager.Instance.canAttack = previousCanAttack;
-            PlayerActionManager.Instance.canInteract = previousCanInteract;
-            PlayerActionManager.Instance.canBackpack = previousCanBackpack;
-            PlayerActionManager.Instance.canDodge = previousCanDodge;
-
-            //»Ö¸´ Tip
+            PlayerActionManager.Instance.UnlockActions("task");
             if (ActionTipUI.Instance != null && activeTipIDs != null)
                 ActionTipUI.Instance.RestoreTips(activeTipIDs);
         }

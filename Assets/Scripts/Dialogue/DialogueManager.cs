@@ -1,68 +1,67 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
-public class DialogueManager : MonoBehaviour
+public class DialogueManager : SingletonMono<DialogueManager>
 {
-    public static DialogueManager Instance;
-
-    [Header("UI引用")]
+    [Header("UI缁勪欢")]
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI contentText;
-    public GameObject dialoguePanel; //包含背景和文本
-    public Image backgroundImage;    //对话背景Image
+    public GameObject dialoguePanel;
+    public Image backgroundImage;
     public float typingSpeed = 0.03f;
-    public float fadeDuration = 0.3f; //背景淡入淡出时间
+    public float fadeDuration = 0.3f;
 
     private string[] currentLines;
     private int currentIndex;
     private bool isTyping;
     private bool skipTyping;
-
     private CanvasGroup canvasGroup;
-
     private System.Action onDialogueFinishedCallback;
 
-    private void Awake()
-    {
-        if (Instance == null)
-            Instance = this;
-        else
-            Destroy(gameObject);
+    // Track coroutine references so we can stop before restarting
+    private Coroutine _displayCoroutine;
+    private Coroutine _fadeCoroutine;
 
+    protected override void Awake()
+    {
+        base.Awake();
         canvasGroup = dialoguePanel.GetComponent<CanvasGroup>();
         if (canvasGroup == null)
             canvasGroup = dialoguePanel.AddComponent<CanvasGroup>();
-
         dialoguePanel.SetActive(false);
     }
 
     public void StartDialogue(string npcName, string[] lines, System.Action callback = null)
     {
-        if (lines == null || lines.Length == 0)
-            return;
+        if (lines == null || lines.Length == 0) return;
+
+        // Stop any in-progress coroutines before starting fresh
+        StopAllDialogueCoroutines();
+
         RectTransform rect = dialoguePanel.GetComponent<RectTransform>();
-        if (npcName == "PlayerSelf")
-        {
-            rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, 84f);
-        }
-        else
-        {
-            rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, 0f);
-        }
+        rect.anchoredPosition = new Vector2(rect.anchoredPosition.x,
+            npcName == "PlayerSelf" ? 84f : 0f);
+
         onDialogueFinishedCallback = callback;
         nameText.text = npcName;
         currentLines = lines;
         currentIndex = 0;
+        isTyping = false;
+        skipTyping = false;
+
         dialoguePanel.SetActive(true);
-        StartCoroutine(FadeInPanel());
-        StartCoroutine(DisplayLine());
+        _fadeCoroutine = StartCoroutine(FadeInPanel());
+        _displayCoroutine = StartCoroutine(DisplayLine());
     }
 
-
+    private void StopAllDialogueCoroutines()
+    {
+        if (_displayCoroutine != null) { StopCoroutine(_displayCoroutine); _displayCoroutine = null; }
+        if (_fadeCoroutine != null)    { StopCoroutine(_fadeCoroutine);    _fadeCoroutine = null; }
+    }
 
     private IEnumerator FadeInPanel()
     {
@@ -75,6 +74,7 @@ public class DialogueManager : MonoBehaviour
             yield return null;
         }
         canvasGroup.alpha = 1f;
+        _fadeCoroutine = null;
     }
 
     private IEnumerator FadeOutPanel()
@@ -89,6 +89,8 @@ public class DialogueManager : MonoBehaviour
         }
         canvasGroup.alpha = 0f;
         dialoguePanel.SetActive(false);
+        _fadeCoroutine = null;
+
         onDialogueFinishedCallback?.Invoke();
         onDialogueFinishedCallback = null;
     }
@@ -103,12 +105,7 @@ public class DialogueManager : MonoBehaviour
 
         foreach (char c in line)
         {
-            if (skipTyping)
-            {
-                contentText.text = line;
-                break;
-            }
-
+            if (skipTyping) { contentText.text = line; break; }
             contentText.text += c;
             yield return new WaitForSeconds(typingSpeed);
         }
@@ -116,9 +113,9 @@ public class DialogueManager : MonoBehaviour
         isTyping = false;
         skipTyping = false;
 
-        //使用新输入系统等待空格键
         yield return new WaitUntil(() => Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame);
 
+        _displayCoroutine = null;
         NextLine();
     }
 
@@ -127,7 +124,7 @@ public class DialogueManager : MonoBehaviour
         if (currentIndex < currentLines.Length - 1)
         {
             currentIndex++;
-            StartCoroutine(DisplayLine());
+            _displayCoroutine = StartCoroutine(DisplayLine());
         }
         else
         {
@@ -137,13 +134,13 @@ public class DialogueManager : MonoBehaviour
 
     private void EndDialogue()
     {
-        StartCoroutine(FadeOutPanel());
         currentLines = null;
+        if (_fadeCoroutine != null) StopCoroutine(_fadeCoroutine);
+        _fadeCoroutine = StartCoroutine(FadeOutPanel());
     }
 
     private void Update()
     {
-        // 使用新输入系统检测空格键，跳过打字效果
         if (isTyping && Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
             skipTyping = true;
     }

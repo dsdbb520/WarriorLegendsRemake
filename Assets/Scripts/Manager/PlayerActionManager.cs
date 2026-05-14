@@ -2,128 +2,91 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class PlayerActionManager : MonoBehaviour
+/// <summary>
+/// Centralized action permission system using a named-lock model.
+///
+/// Usage:
+///   Open a panel  → LockActions("myPanel", "myPanel")  (only "myPanel" action stays on)
+///   Close a panel → UnlockActions("myPanel")
+///   Block all     → LockActions("dialogue")
+///   Unblock all   → UnlockActions("dialogue")
+///
+/// An action is allowed only when NO active lock blocks it.
+/// Multiple systems can each hold their own independent lock; actions re-enable
+/// automatically once the last lock that blocks them is released — no save/restore needed.
+/// </summary>
+public class PlayerActionManager : SingletonMono<PlayerActionManager>
 {
-    public static PlayerActionManager Instance;
+    // owner string → set of actions allowed while this lock is held (empty = nothing allowed)
+    private readonly Dictionary<string, HashSet<string>> _locks = new Dictionary<string, HashSet<string>>();
 
-    [Header("����Ȩ��")]
-    public bool canMove = true;
-    public bool canJump = true;
-    public bool canAttack = true;
-    public bool canInteract = true;
-    public bool canTask = true;
-    public bool canBackpack = true;
-    public bool canDodge = true;
+    private static readonly string[] AllActions =
+        { "move", "jump", "attack", "interact", "task", "backpack", "dodge" };
 
-    private void Awake()
+    // ── Computed action states ──────────────────────────────────────────────
+    public bool canMove     => IsAllowed("move");
+    public bool canJump     => IsAllowed("jump");
+    public bool canAttack   => IsAllowed("attack");
+    public bool canInteract => IsAllowed("interact");
+    public bool canTask     => IsAllowed("task");
+    public bool canBackpack => IsAllowed("backpack");
+    public bool canDodge    => IsAllowed("dodge");
+
+    private bool IsAllowed(string action)
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        foreach (var kv in _locks)
+            if (!kv.Value.Contains(action)) return false;
+        return true;
     }
 
-    #region ������������
+    // ── Lock API ────────────────────────────────────────────────────────────
 
-    public void DisableAll()
+    /// <summary>
+    /// Holds a named lock that blocks all actions except those listed in allowedActions.
+    /// Calling again with the same owner updates the lock in place.
+    /// </summary>
+    public void LockActions(string owner, params string[] allowedActions)
     {
-        canMove = false;
-        canJump = false;
-        canAttack = false;
-        canInteract = false;
-        canTask = false;
-        canBackpack = false;
-        canDodge = false;
+        _locks[owner] = new HashSet<string>(allowedActions);
     }
 
-    public void EnableAll()
+    /// <summary>Releases the named lock. Actions re-enable when no locks remain.</summary>
+    public void UnlockActions(string owner)
     {
-        canMove = true;
-        canJump = true;
-        canAttack = true;
-        canInteract = true;
-        canTask = true;
-        canBackpack = true;
-        canDodge = true;
+        _locks.Remove(owner);
     }
 
-    public void SetAction(string actionName, bool enable)
-    {
-        switch (actionName.ToLower())
-        {
-            case "move":
-                canMove = enable;
-                break;
-            case "jump":
-                canJump = enable;
-                break;
-            case "attack":
-                canAttack = enable;
-                break;
-            case "interact":
-                canInteract = enable;
-                break;
-            case "task":
-                canTask = enable;
-                break;
-            case "backpack":
-                canBackpack = enable;
-                break;
-            case "dodge":
-                canDodge = enable;
-                break;
-            default:
-                Debug.LogWarning("δʶ��Ĳ���: " + actionName);
-                break;
-        }
-    }
+    /// <summary>Clears every active lock. Call on scene load to prevent stale locks.</summary>
+    public void ResetAllLocks() => _locks.Clear();
 
-    #endregion
+    // ── Legacy API (backward compatible) ───────────────────────────────────
 
-    #region ��ʱ��Ĳ�������
+    public void DisableAll()                     => LockActions("__global__");
+    public void EnableAll()                      => UnlockActions("__global__");
+    public void EnableOnlyAction(string action)  => LockActions("__global__", action);
 
-    private Dictionary<string, Coroutine> tempDisableCoroutines = new Dictionary<string, Coroutine>();
+    // ── Timed per-action disable ────────────────────────────────────────────
+
+    private readonly Dictionary<string, Coroutine> _tempCoroutines = new Dictionary<string, Coroutine>();
 
     public void DisableActionTemporary(string actionName, float duration)
     {
-        actionName = actionName.ToLower();
+        if (_tempCoroutines.TryGetValue(actionName, out var existing) && existing != null)
+            StopCoroutine(existing);
 
-        if (tempDisableCoroutines.ContainsKey(actionName) && tempDisableCoroutines[actionName] != null)
-        {
-            StopCoroutine(tempDisableCoroutines[actionName]);
-            tempDisableCoroutines.Remove(actionName);
-        }
-
-        SetAction(actionName, false);
-
-        Coroutine c = StartCoroutine(ReenableActionAfterTime(actionName, duration));
-        tempDisableCoroutines[actionName] = c;
+        _tempCoroutines[actionName] = StartCoroutine(TempDisable(actionName, duration));
     }
 
-    private IEnumerator ReenableActionAfterTime(string actionName, float duration)
+    private IEnumerator TempDisable(string actionName, float duration)
     {
+        string owner = "temp_" + actionName;
+        var allowed = new List<string>(AllActions);
+        allowed.Remove(actionName);
+        LockActions(owner, allowed.ToArray());
+
         yield return new WaitForSeconds(duration);
-        SetAction(actionName, true);
-        tempDisableCoroutines.Remove(actionName);
+
+        UnlockActions(owner);
+        _tempCoroutines.Remove(actionName);
     }
-
-    #endregion
-
-    #region ֻ����ָ������
-
-    /// <summary>
-    /// ֻ����ָ������������������ȫ�����á�
-    /// </summary>
-    /// <param name="actionName">Ҫ�����Ĳ�������</param>
-    public void EnableOnlyAction(string actionName)
-    {
-        DisableAll();
-        SetAction(actionName, true);
-    }
-
-    #endregion
 }

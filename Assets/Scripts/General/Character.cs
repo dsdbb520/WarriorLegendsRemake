@@ -1,14 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public enum Faction
-{
-    Player,
-    Enemy,
-    Neutral
-}
+public enum Faction { Player, Enemy, Neutral }
 
 [System.Serializable]
 public class CharacterStats
@@ -21,35 +15,36 @@ public class CharacterStats
     public float jumpForce = 5f;
 }
 
-
 public class Character : MonoBehaviour
 {
-    [Header("ÕóÓªÉèÖÃ")]
+    [Header("é˜µè¥è®¾ç½®")]
     public Faction faction = Faction.Neutral;
 
-    [Header("ºËÐÄÊôÐÔ")]
+    [Header("è§’è‰²å±žæ€§")]
     public CharacterStats stats = new CharacterStats();
     public PlayStatBar playStatBar;
 
-    [Header("Shader Ð§¹û")]
+    [Header("Shader æ•ˆæžœ")]
     private SpriteRenderer spriteRenderer;
     private MaterialPropertyBlock propBlock;
     private int flashAmountID;
 
-    public float maxHealth => stats.maxHealth;    // ¼æÈÝ¾ÉUI
+    public float maxHealth => stats.maxHealth;
     public float currentHealth => stats.currentHealth;
 
     private float beforeHealth;
 
-    [Header("ÊÜ»÷²ÎÊý")]
+    [Header("æ— æ•Œå¸§")]
     public float noDamageTime = 0.5f;
     private float noDamageCounter;
     public bool noDamage;
 
-    [Header("ÊÂ¼þ")]
+    [Header("äº‹ä»¶")]
     public UnityEvent<Character> OnHealthChange;
     public UnityEvent<Transform> OnTakeDamage;
     public UnityEvent<Transform> Dead;
+
+    private Coroutine _flashCoroutine;
 
     private void Awake()
     {
@@ -69,12 +64,8 @@ public class Character : MonoBehaviour
         if (noDamage)
         {
             noDamageCounter -= Time.deltaTime;
-            Debug.Log($"[Update] {gameObject.name} noDamageCounter: {noDamageCounter}");
             if (noDamageCounter <= 0)
-            {
                 noDamage = false;
-                Debug.Log($"[Update] {gameObject.name} noDamage ended.");
-            }
         }
 
         if (beforeHealth != stats.currentHealth)
@@ -86,86 +77,51 @@ public class Character : MonoBehaviour
 
     public void TakeDamage(float damage, Character attacker)
     {
-        Debug.Log($"[TakeDamage] Called on {gameObject.name}. Current Health: {stats.currentHealth}, Damage: {damage}, NoDamage: {noDamage}");
+        if (noDamage) return;
 
-        if (noDamage)
-        {
-            Debug.Log($"[TakeDamage] {gameObject.name} is in noDamage state, ignoring damage.");
-            return;
-        }
-
-        // ¼ÆËãÊµ¼ÊÉËº¦
         float damageTaken = Mathf.Max(damage - stats.defense, 0);
         stats.currentHealth -= damageTaken;
-        Debug.Log($"[TakeDamage] {gameObject.name} took {damageTaken} damage. New Health: {stats.currentHealth}");
 
-        // ËÀÍö´¦Àí
         if (stats.currentHealth <= 0)
         {
             stats.currentHealth = 0;
             Dead?.Invoke(attacker ? attacker.transform : null);
-            Debug.Log($"[TakeDamage] {gameObject.name} died.");
         }
 
-        // Ö»ÔÚÊ×´ÎÊÜµ½ÉËº¦Ê±´¥·¢ÎÞµÐÊ±¼ä
-        if (!noDamage)
-        {
-            TriggerNoDamage();
-            Debug.Log($"[TakeDamage] {gameObject.name} triggered noDamage for {noDamageTime} seconds.");
-        }
-
-        // ´¥·¢ÊÜ»÷ÊÂ¼þ
+        TriggerNoDamage();
         OnTakeDamage?.Invoke(attacker ? attacker.transform : null);
-        StartCoroutine(FlashEffect());
-        Debug.Log($"[TakeDamage] OnTakeDamage invoked by {attacker?.gameObject.name}");
 
+        // Stop previous flash before starting a new one
+        if (_flashCoroutine != null) StopCoroutine(_flashCoroutine);
+        _flashCoroutine = StartCoroutine(FlashEffect());
     }
 
     private IEnumerator FlashEffect()
     {
         while (noDamage)
         {
-            if (spriteRenderer != null)
-            {
-                spriteRenderer.GetPropertyBlock(propBlock);
-                propBlock.SetFloat(flashAmountID, 1f); 
-                spriteRenderer.SetPropertyBlock(propBlock);
-
-                yield return new WaitForSeconds(0.2f); //±ä°×³ÖÐøÊ±¼ä
-
-                spriteRenderer.GetPropertyBlock(propBlock);
-                propBlock.SetFloat(flashAmountID, 0f);
-                spriteRenderer.SetPropertyBlock(propBlock);
-
-                yield return new WaitForSeconds(0.2f);
-            }
-            else
-            {
-                yield return null;
-            }
+            SetFlash(1f);
+            yield return new WaitForSeconds(0.2f);
+            SetFlash(0f);
+            yield return new WaitForSeconds(0.2f);
         }
+        SetFlash(0f);
+        _flashCoroutine = null;
+    }
 
-        if (spriteRenderer != null)
-        {
-            Color c = spriteRenderer.color;
-            c.a = 1f;
-            spriteRenderer.color = c;
-
-            spriteRenderer.GetPropertyBlock(propBlock);
-            propBlock.SetFloat(flashAmountID, 0f);
-            spriteRenderer.SetPropertyBlock(propBlock);
-        }
+    private void SetFlash(float value)
+    {
+        if (spriteRenderer == null) return;
+        spriteRenderer.GetPropertyBlock(propBlock);
+        propBlock.SetFloat(flashAmountID, value);
+        spriteRenderer.SetPropertyBlock(propBlock);
     }
 
     public void Heal(float amount)
     {
-        stats.currentHealth += amount;
-        if (stats.currentHealth > stats.maxHealth) stats.currentHealth = stats.maxHealth;
-
-        OnHealthChange?.Invoke(this); //Ë¢ÐÂÑªÌõ UI
-        Debug.Log($"Íæ¼Ò»Ø¸´ÁË {amount} µãÉúÃü");
+        stats.currentHealth = Mathf.Min(stats.currentHealth + amount, stats.maxHealth);
+        OnHealthChange?.Invoke(this);
     }
-
 
     public void TriggerNoDamage()
     {
@@ -173,7 +129,6 @@ public class Character : MonoBehaviour
         noDamageCounter = noDamageTime;
     }
 
-    //ÅÐ¶ÏÊÇ·ñµÐ¶Ô
     public bool IsHostileTo(Character other)
     {
         if (other == null) return false;
